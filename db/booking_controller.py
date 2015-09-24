@@ -23,3 +23,6 @@ class BookingController:
 		table = self.get_or_create_booking()
 		item = Item(table, data={'space_id': space_id, 'room_id': room_id})
 		item.save()
+
+	def get_bookings(self, space):
+		return self.get_bookings_table().scan()
