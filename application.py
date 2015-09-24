@@ -39,6 +39,7 @@ def rooms():
     return render_template("rooms.html")
 
 from db.space import SpaceController
+from db.booking_controller import BookingController
 from db.setup import setup_connection
 
 @application.route('/setup_data')
@@ -50,10 +51,16 @@ def setup_data():
 def test():
     controller = SpaceController()
     for space in controller.get_spaces():
-        for room in controller.get_rooms(space):            
-            print space['name']
-            print room['name']
-    
+        for room in controller.get_rooms(space):
+            booking_controller = BookingController()
+            booking_controller.create_booking(space, room)
+
+@application.route('/bookings/create')
+def booking_create_handler():
+    space_id = request.args.get('space_id','')
+    room_id = request.args.get('room_id','')
+    controller = BookingController()
+    controller.create_booking(space_id, room_id)
 
 # run the app.
 if __name__ == "__main__":
