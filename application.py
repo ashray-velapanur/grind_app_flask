@@ -1,4 +1,5 @@
 from flask import Flask
+import boto
 
 # print a nice greeting.
 def say_hello(username = "World"):
@@ -25,6 +26,18 @@ application.add_url_rule('/', 'index', (lambda: header_text +
 # URL.
 application.add_url_rule('/<username>', 'hello', (lambda username:
     header_text + say_hello(username) + home_link + footer_text))
+
+
+from db.setup import setup_test_data, get_data, connect
+
+@application.route('/setup_data')
+def setup_data():
+    setup_test_data()
+ 
+@application.route('/fetch_data')
+def fetch_data():
+    data = get_data()
+    return '<p>%s</p>\n' % data['field_1']
 
 # run the app.
 if __name__ == "__main__":
