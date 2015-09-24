@@ -33,17 +33,19 @@ def index():
     print 'In index page'
     return render_template("index.html")
 
-
-from db.setup import setup_test_data, get_data
+from db.space import SpaceController
+from db.setup import setup_connection
 
 @application.route('/setup_data')
 def setup_data():
-    setup_test_data()
+    controller = SpaceController()
+    controller.create_space('Grind Space 1')
  
-@application.route('/fetch_data')
-def fetch_data():
-    data = get_data()
-    return '<p>%s</p>\n' % data['field_1']
+@application.route('/test')
+def test():
+    connection = setup_connection()
+    print connection.describe_table("Spaces")
+    
 
 # run the app.
 if __name__ == "__main__":
