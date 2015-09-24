@@ -27,6 +27,7 @@
                                         <div> {{room.name}} </div>
                                         <div> Private Meeting Room for {{room.size}} </div>
                                         <div> Amenities: {{room.amenities}} </div>
+                                        <div> Rate: ${{room.price}}/hour </div>
                                     </td>
                                     <td>
                                         <form action="/book?space={{space.space_id}}&room={{room.room_id}}" method="post">
