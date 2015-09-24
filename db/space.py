@@ -8,11 +8,17 @@ class SpaceController:
 	def __init__(self, connection=setup_connection()):
 		self.connection = connection
 	
+	def get_spaces_table(self):
+		return Table("Spaces", connection=self.connection)
+
+	def get_rooms_table(self):
+		return Table("Rooms", connection=self.connection)
+
 	def get_or_create_space(self): #fix this!
 		try:
 			status = self.connection.describe_table("Spaces")['Table']['TableStatus']
 			if status == "ACTIVE":
-				return Table("Spaces", connection=self.connection)
+				return self.get_spaces_table()
 		except JSONResponseError:
 			return Table.create('Spaces', schema=[HashKey('space_id')], connection=self.connection);
 		
@@ -20,7 +26,7 @@ class SpaceController:
 		try:
 			status = self.connection.describe_table("Rooms")['Table']['TableStatus']
 			if status == "ACTIVE":
-				return Table("Rooms", connection=self.connection)
+				return self.get_rooms_table()
 		except JSONResponseError:
 			return Table.create('Rooms', schema=[HashKey('space_id'), RangeKey('room_id')], connection=self.connection);
 
@@ -35,13 +41,14 @@ class SpaceController:
 		item = Item(table, data={'space_id': space_id, 'room_id': name.lower().replace(' ', '_'), 'name': name, 'price': price})
 		item.save()
 
-	def get_spaces(self):
-		table = Table("Spaces", connection=self.connection)
-		return table.scan()
+	def get_spaces(self, space_id=None):
+		if space_id:
+			return self.get_spaces_table.query_2(space_id__eq=space_id)
+		else:
+			return self.get_spaces_table().scan()
 
 	def get_rooms(self, space):
-		table = Table("Rooms", connection=self.connection)
-		return table.query_2(space_id__eq=space['space_id'])
+		return self.get_rooms_table().query_2(space_id__eq=space['space_id'])
 
 
 
