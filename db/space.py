@@ -35,3 +35,13 @@ class SpaceController:
 		item = Item(table, data={'space_id': space_id, 'room_id': name.lower().replace(' ', '_'), 'name': name, 'price': price})
 		item.save()
 
+	def get_spaces(self):
+		table = Table("Spaces", connection=self.connection)
+		return table.scan()
+
+	def get_rooms(self, space):
+		table = Table("Rooms", connection=self.connection)
+		return table.query_2(space_id__eq=space['space_id'])
+
+
+

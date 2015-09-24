@@ -48,8 +48,11 @@ def setup_data():
  
 @application.route('/test')
 def test():
-    connection = setup_connection()
-    print connection.describe_table("Spaces")
+    controller = SpaceController()
+    for space in controller.get_spaces():
+        for room in controller.get_rooms(space):            
+            print space['name']
+            print room['name']
     
 
 # run the app.
