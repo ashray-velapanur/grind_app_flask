@@ -33,6 +33,11 @@ def index():
     print 'In index page'
     return render_template("index.html")
 
+@application.route('/rooms', methods=["GET", "POST"])
+def rooms():
+    print 'In rooms page'
+    return render_template("rooms.html")
+
 from db.space import SpaceController
 from db.setup import setup_connection
 
