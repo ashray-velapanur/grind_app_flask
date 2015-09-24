@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template, request, redirect, jsonify, json
 import boto
 
 # print a nice greeting.
@@ -18,14 +18,19 @@ footer_text = '</body>\n</html>'
 # EB looks for an 'application' callable by default.
 application = Flask(__name__)
 
-# add a rule for the index page.
-application.add_url_rule('/', 'index', (lambda: header_text +
-    say_hello() + instructions + footer_text))
+# # add a rule for the index page.
+# application.add_url_rule('/', 'index', (lambda: header_text +
+#     say_hello() + instructions + footer_text))
 
-# add a rule when the page is accessed with a name appended to the site
-# URL.
-application.add_url_rule('/<username>', 'hello', (lambda username:
-    header_text + say_hello(username) + home_link + footer_text))
+# # add a rule when the page is accessed with a name appended to the site
+# # URL.
+# application.add_url_rule('/<username>', 'hello', (lambda username:
+#     header_text + say_hello(username) + home_link + footer_text))
+
+@application.route('/index', methods=["GET", "POST"])
+def index():
+    print 'In index page'
+    return render_template("index.html")
 
 
 from db.setup import setup_test_data, get_data, connect
