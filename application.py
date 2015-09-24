@@ -1,6 +1,10 @@
 from flask import Flask, render_template, request, redirect, jsonify, json
 import boto
 
+from db.space import SpaceController
+from db.booking_controller import BookingController
+from db.setup import setup_connection
+
 # print a nice greeting.
 def say_hello(username = "World"):
     return '<p>Hello %s!</p>\n' % username
@@ -31,21 +35,37 @@ application = Flask(__name__)
 @application.route('/index', methods=["GET", "POST"])
 def index():
     print 'In index page'
-    return render_template("index.html")
+    controller = SpaceController()
+    spaces = controller.get_spaces()
+    return render_template("index.html", spaces=spaces)
 
 @application.route('/rooms', methods=["GET", "POST"])
 def rooms():
     print 'In rooms page'
-    return render_template("rooms.html")
-
-from db.space import SpaceController
-from db.booking_controller import BookingController
-from db.setup import setup_connection
+    controller = SpaceController()
+    args = request.args
+    space_id = args.get('space', '')
+    space = controller.get_spaces(space_id=space_id)
+    rooms = controller.get_rooms(space)
+    return render_template("rooms.html", space=space, rooms=rooms)
 
 @application.route('/setup_data')
 def setup_data():
     controller = SpaceController()
-    controller.create_space('Grind Space 1')
+
+    space = controller.create_space('Grind Broadway', '1412 Broadway, 22nd Fl', 'New York', 'NY', '10018', '(646) 558 - 6026')
+    controller.create_room(space, 'Play Tank', 5, 'WiFi, Whiteboard, Coffee/Tea, Filtered Water, Print/Scan/Copy ($), Phone, TV/Monitor, Wired Internet', 10)
+    controller.create_room(space, 'Shark Tank', 18, 'WiFi, Whiteboard, Wired Internet, Coffee/Tea, Filtered Water, Print/Scan/Copy ($), Phone, TV/Monitor, Video Conference',25)
+    controller.create_room(space, 'Work Tank', 5, 'WiFi, Whiteboard, Coffee/Tea, Filtered Water, Print/Scan/Copy ($), Phone,TV/Monitor, Wired Internet', 10)
+
+    space = controller.create_space('Grind Park', '419 Park Avenue South, 2nd Fl', 'New York', 'NY', '10016', '(646) 558 - 3250')
+    controller.create_room(space, 'Think Tank', 10, 'WiFi, TV/Monitor, Whiteboard, Coffee/Tea, Filtered Water, Print/Scan/Copy ($), Phone, Wired Internet',15)
+
+    space = controller.create_space('Grind LaSalle', '2 N. LaSalle Street', 'Chicago', 'IL', '60602', '(312) 488 - 4887')
+    controller.create_room(space, 'Do Tank', 8, 'WiFi, TV/Monitor, Whiteboard, Wired Internet, Accessibility, Coffee/Tea, Filtered Water, On-site Restaurant, Print/Scan/Copy', 12)
+    controller.create_room(space, 'Play Tank', 4, 'WiFi, TV/Monitor, Whiteboard, Accessibility, Coffee/Tea, Filtered Water, Wired Internet, On-site Restaurant, Print/Scan/Copy', 8)
+    controller.create_room(space, 'Think Tank', 8, 'WiFi, TV/Monitor, Whiteboard, Wired Internet, Accessibility, Coffee/Tea, Filtered Water, On-site Restaurant, Print/Scan/Copy', 12)
+    controller.create_room(space, 'Work Tank', 4, 'WiFi, Whiteboard, Accessibility, Coffee/Tea, Filtered Water, Wired Internet, On-site Restaurant, Print/Scan/Copy', 8)
  
 @application.route('/test')
 def test():

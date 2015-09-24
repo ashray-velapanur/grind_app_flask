@@ -30,20 +30,22 @@ class SpaceController:
 		except JSONResponseError:
 			return Table.create('Rooms', schema=[HashKey('space_id'), RangeKey('room_id')], connection=self.connection);
 
-	def create_space(self, name):
+	def create_space(self, name, address, city, state, zip, phone):
 		table = self.get_or_create_space()
-		item = Item(table, data={'space_id': name.lower().replace(' ', '_'), 'name': name})
+		item = Item(table, data={'space_id': name.lower().replace(' ', '_'), 'name': name, 'address': address, 'city': city, 'state': state, 'zip': zip, 'phone': phone})
 		item.save()
+		return item
 
-	def create_room(self, space, name, price):
+	def create_room(self, space, name, size, amenities_list, price):
 		table = self.get_or_create_room()
 		space_id = space['space_id']
-		item = Item(table, data={'space_id': space_id, 'room_id': name.lower().replace(' ', '_'), 'name': name, 'price': price})
+		item = Item(table, data={'space_id': space_id, 'room_id': name.lower().replace(' ', '_'), 'name': name, 'size': size, 'amenities': amenities_list, 'price': price})
 		item.save()
+		return item
 
 	def get_spaces(self, space_id=None):
 		if space_id:
-			return self.get_spaces_table.query_2(space_id__eq=space_id)
+			return self.get_spaces_table().query_2(space_id__eq=space_id).next()
 		else:
 			return self.get_spaces_table().scan()
 

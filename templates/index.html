@@ -12,49 +12,32 @@
         
     </div>
     <div class="container">
-      <!-- Example row of columns -->
       <div class="row">
         <div class="col-md-4">
-          <h2><b>SPACES</b></h2>
-          <p>
-            <table>
-                <tbody>
-                    <tr style="border-bottom: 1px solid black;">
-                        <td style="padding:10px 100px 10px 0px;">
-                            <div> Grind Broadway </div>
-                            <div>1412 Broadway, 22nd Fl<br>New York, NY 10018<br>(646) 558 - 6026</div>
-                        </td>
-                        <td>
-                            <form action="/rooms?space=1" method="post">
-                                <button> Choose </button>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid black;">
-                        <td style="padding:10px 100px 10px 0px;">
-                            <div> Grind Park </div>
-                            <div>419 Park Avenue South, 2nd Fl<br>New York, NY 10016<br>(646) 558 - 3250</div>
-                        </td>
-                        <td>
-                            <form action="/rooms?space=2" method="post">
-                                <button> Choose </button>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid black;">
-                        <td style="padding:10px 100px 10px 0px;">
-                            <div> Grind LaSalle </div>
-                            <div>2 N. LaSalle Street<br>Chicago, IL 60602<br>(312) 488 - 4887</div>
-                        </td>
-                        <td>
-                            <form action="/rooms?space=3" method="post">
-                                <button> Choose </button>
-                            </form>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-          </p>
+            <h2><b>SPACES</b></h2>
+        {% if not spaces %}
+            <p> No spaces listed </p>
+        {% else %}
+            <p>
+                <table>
+                    <tbody>
+                        {% for space in spaces %}
+                            <tr style="border-bottom: 1px solid black;">
+                                <td style="padding:10px 100px 10px 0px;">
+                                    <div> {{space.name}} </div>
+                                    <div>{{space.address}}<br>{{space.city}}, {{space.state}} {{space.zip}}<br>{{space.phone}}</div>
+                                </td>
+                                <td>
+                                    <form action="/rooms?space={{space.space_id}}" method="post">
+                                        <button> Choose </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </p>
+        {% endif %}
         </div>
       </div>
     </div> 
