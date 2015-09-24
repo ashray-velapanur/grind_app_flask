@@ -49,6 +49,24 @@ def rooms():
     rooms = controller.get_rooms(space)
     return render_template("rooms.html", space=space, rooms=rooms)
 
+@application.route('/book', methods=["GET", "POST"])
+def book():
+    print 'In book page'
+    controller = SpaceController()
+    args = request.args
+    space_id = args.get('space', '')
+    room_id = args.get('room', '')
+    space = controller.get_spaces(space_id=space_id)
+    room = controller.get_rooms(space, room_id=room_id)
+    return render_template("book.html", space=space, room=room)
+
+@application.route('/bookings', methods=["GET", "POST"])
+def bookings():
+    print 'In bookings page'
+    controller = BookingController()
+    bookings = controller.get_bookings()
+    return render_template("bookings.html", bookings=bookings)
+
 @application.route('/setup_data')
 def setup_data():
     controller = SpaceController()
@@ -75,12 +93,17 @@ def test():
             booking_controller = BookingController()
             booking_controller.create_booking(space, room)
 
-@application.route('/bookings/create')
+@application.route('/bookings/create', methods=["POST"])
 def booking_create_handler():
-    space_id = request.args.get('space_id','')
-    room_id = request.args.get('room_id','')
+    print "In booking create"
+    form = request.form
+    space_id = form['space_id']
+    room_id = form['room_id']
+    print space_id
+    print room_id
     controller = BookingController()
     controller.create_booking(space_id, room_id)
+    return redirect("/bookings")
 
 # run the app.
 if __name__ == "__main__":

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+    <div class="container">
+        <div style="padding-top:10px">
+            <center>
+                <h1>
+                    BOOKINGS LISTING
+                </h1>
+            </center>
+        </div>
+        
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+            <h2><b>BOOKINGS</b></h2>
+        {% if not bookings %}
+            <p> No bookings made </p>
+        {% else %}
+            <p>
+                <table>
+                    <tbody>
+                        {% for booking in bookings %}
+                            <tr style="border-bottom: 1px solid black;">
+                                <td style="padding:10px 100px 10px 0px;">
+                                    <div> SPACE: {{booking.space_id}}, ROOM: {{booking.room_id}} </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </p>
+        {% endif %}
+        </div>
+      </div>
+    </div> 
+</div>
+{% endblock %}

@@ -49,8 +49,11 @@ class SpaceController:
 		else:
 			return self.get_spaces_table().scan()
 
-	def get_rooms(self, space):
-		return self.get_rooms_table().query_2(space_id__eq=space['space_id'])
+	def get_rooms(self, space, room_id=None):
+		if room_id:
+			return self.get_rooms_table().query_2(space_id__eq=space['space_id'], room_id__eq=room_id).next()
+		else:
+			return self.get_rooms_table().query_2(space_id__eq=space['space_id'])
 
 
 

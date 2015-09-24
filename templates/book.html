@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+    <div class="container">
+        <div style="padding-top:10px">
+            <center>
+                <h1>
+                    BOOK ROOM
+                </h1>
+            </center>
+        </div>
+        
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+            <h2><b>{{space.name}}</b></h2>
+            <h3><b>{{room.name}}</b></h3>
+            <form action="/bookings/create" method="post">
+                <input type="hidden" name="space_id" value="{{space.space_id}}">
+                <input type="hidden" name="room_id" value="{{room.room_id}}">
+                <button> BOOK IT NOW </button>
+            </form>
+        </div>
+      </div>
+    </div> 
+</div>
+{% endblock %}
