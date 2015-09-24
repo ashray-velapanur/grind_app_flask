@@ -27,13 +27,14 @@ application = Flask(__name__)
 # application.add_url_rule('/<username>', 'hello', (lambda username:
 #     header_text + say_hello(username) + home_link + footer_text))
 
+@application.route('/')
 @application.route('/index', methods=["GET", "POST"])
 def index():
     print 'In index page'
     return render_template("index.html")
 
 
-from db.setup import setup_test_data, get_data, connect
+from db.setup import setup_test_data, get_data
 
 @application.route('/setup_data')
 def setup_data():
