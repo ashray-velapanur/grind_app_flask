@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+    <div class="container">
+        <div style="padding-top:10px">
+            <center>
+                <h1>
+                    GRIND SPACES
+                </h1>
+            </center>
+        </div>
+
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+            <h2><b>SPACES</b></h2>
+        {% if not spaces %}
+            <p> No spaces listed </p>
+        {% else %}
+            <p>
+                <table>
+                    <tbody>
+                        {% for space in spaces %}
+                            <tr style="border-bottom: 1px solid black;">
+                                <td style="padding:10px 100px 10px 0px;">
+                                    <div> {{space.name}} </div>
+                                    <div>{{space.address}}<br>{{space.city}}, {{space.state}} {{space.zip}}<br>{{space.phone}}</div>
+                                </td>
+                                <td>
+                                    <form action="/rooms?space={{space.space_id}}" method="post">
+                                        <button> Choose </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </p>
+        {% endif %}
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}

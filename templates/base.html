@@ -18,18 +18,9 @@
           <a class="navbar-brand" href="/">Grind</a>
         </div>
         <div class="navbar-collapse collapse">
-          {% if user == None %}
-          <form class="navbar-form navbar-right" action="/index" method="post">
-            <div class="form-group">
-              <input type="text" name="username" placeholder="i.e. John" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-success">Log In</button>
-          </form>
-          {% else %}
-            {% if user != "" %}
-                <a href="/logout" class="logout"> Logout? </a>
-                <p class="logout" style="display:inline;color:white;padding-right:5px"> Hi {{user}},  </p>
-            {% endif %}
+          {% if user and user != "" %}
+              <a href="/logout" class="logout"> Logout? </a>
+              <p class="logout" style="display:inline;color:white;padding-right:5px"> Hi {{user.first_name}},  </p>
           {% endif %}
         </div><!--/.navbar-collapse -->
       </div>

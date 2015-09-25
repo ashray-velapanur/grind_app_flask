@@ -9,35 +9,28 @@
                 </h1>
             </center>
         </div>
-        
     </div>
     <div class="container">
       <div class="row">
         <div class="col-md-4">
-            <h2><b>SPACES</b></h2>
-        {% if not spaces %}
-            <p> No spaces listed </p>
-        {% else %}
-            <p>
-                <table>
-                    <tbody>
-                        {% for space in spaces %}
-                            <tr style="border-bottom: 1px solid black;">
-                                <td style="padding:10px 100px 10px 0px;">
-                                    <div> {{space.name}} </div>
-                                    <div>{{space.address}}<br>{{space.city}}, {{space.state}} {{space.zip}}<br>{{space.phone}}</div>
-                                </td>
-                                <td>
-                                    <form action="/rooms?space={{space.space_id}}" method="post">
-                                        <button> Choose </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </p>
-        {% endif %}
+            <button onclick="$('#login-form').hide();$('#signup-form').show();"><h2><b>SIGN UP</b></h2></button>
+            <button onclick="$('#signup-form').hide();$('#login-form').show();"><h2><b>LOG IN</b></h2></button>
+            <form id="signup-form" class="navbar-form navbar-right" action="/users/signup" method="post" style="display:none;">
+                SIGN UP
+                <div class="form-group">
+                    <input type="text" name="first_name" placeholder="First Name: John" class="form-control">
+                    <input type="text" name="last_name" placeholder="Last Name: Keats" class="form-control">
+                    <input type="email" name="email" placeholder="Email: john.keats@something.com" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-success">Sign Up</button>
+            </form>
+            <form id="login-form" class="navbar-form navbar-right" action="/users/login" method="post" style="display:none;">
+                LOG IN
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Email: john.keats@something.com" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-success">Log In</button>
+            </form>
         </div>
       </div>
     </div> 

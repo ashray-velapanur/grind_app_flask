@@ -7,6 +7,7 @@ from db.space_controller import SpaceController
 from db.booking_controller import BookingController
 from db.user_controller import UserController
 from db.setup import setup_connection
+from third_party.recurly_api import RecurlyAPI
 
 
 # print a nice greeting.
@@ -40,9 +41,21 @@ application.secret_key = str(uuid4())
 @application.route('/index', methods=["GET", "POST"])
 def index():
     print 'In index page'
+    userController = UserController()
+    user = userController.get_user(session['email']) if 'email' in session else None
+    if not user:
+        return render_template("index.html", user=user)
+    else:
+        return redirect('/grind')
+
+@application.route('/grind', methods=["GET", "POST"])
+def grind():
+    print 'In grind page'
     controller = SpaceController()
     spaces = controller.get_spaces()
-    return render_template("index.html", spaces=spaces)
+    userController = UserController()
+    user = userController.get_user(session['email']) if 'email' in session else None
+    return render_template("grind.html", spaces=spaces, user=user)
 
 @application.route('/rooms', methods=["GET", "POST"])
 def rooms():
@@ -52,7 +65,8 @@ def rooms():
     space_id = args.get('space', '')
     space = controller.get_spaces(space_id=space_id)
     rooms = controller.get_rooms(space)
-    return render_template("rooms.html", space=space, rooms=rooms)
+    user = UserController().get_user(session['email']) if 'email' in session else None
+    return render_template("rooms.html", space=space, rooms=rooms, user=user)
 
 @application.route('/book', methods=["GET", "POST"])
 def book():
@@ -63,14 +77,16 @@ def book():
     room_id = args.get('room', '')
     space = controller.get_spaces(space_id=space_id)
     room = controller.get_rooms(space, room_id=room_id)
-    return render_template("book.html", space=space, room=room)
+    user = UserController().get_user(session['email']) if 'email' in session else None
+    return render_template("book.html", space=space, room=room, user=user)
 
 @application.route('/bookings', methods=["GET", "POST"])
 def bookings():
     print 'In bookings page'
     controller = BookingController()
     bookings = controller.get_bookings()
-    return render_template("bookings.html", bookings=bookings)
+    user = UserController().get_user(session['email']) if 'email' in session else None
+    return render_template("bookings.html", bookings=bookings, user=user)
 
 @application.route('/setup_data')
 def setup_data():
@@ -89,6 +105,8 @@ def setup_data():
     controller.create_room(space, 'Play Tank', 4, 'WiFi, TV/Monitor, Whiteboard, Accessibility, Coffee/Tea, Filtered Water, Wired Internet, On-site Restaurant, Print/Scan/Copy', 8)
     controller.create_room(space, 'Think Tank', 8, 'WiFi, TV/Monitor, Whiteboard, Wired Internet, Accessibility, Coffee/Tea, Filtered Water, On-site Restaurant, Print/Scan/Copy', 12)
     controller.create_room(space, 'Work Tank', 4, 'WiFi, Whiteboard, Accessibility, Coffee/Tea, Filtered Water, Wired Internet, On-site Restaurant, Print/Scan/Copy', 8)
+    user = UserController().get_user(session['email']) if 'email' in session else None
+    return redirect('/', user=user)
  
 @application.route('/test')
 def test():
@@ -97,6 +115,8 @@ def test():
         for room in controller.get_rooms(space):
             booking_controller = BookingController()
             booking_controller.create_booking(space, room)
+    user = UserController().get_user(session['email']) if 'email' in session else None
+    return redirect('/', user=user)
 
 @application.route('/bookings/create', methods=["POST"])
 def booking_create_handler():
@@ -117,6 +137,10 @@ def user_signup_handler():
     last_name = request.form['last_name']
     controller = UserController()
     controller.create_user(email, first_name, last_name)
+    session['email'] = email
+    recurlyapi = RecurlyAPI()
+    recurlyapi.create_account(email, email, first_name, last_name)
+    return redirect('/grind')
 
 @application.route('/users/login', methods=["POST"])
 def user_login_handler():
@@ -125,7 +149,7 @@ def user_login_handler():
     user = controller.get_user(email)
     if user:
         session['email'] = email
-        return jsonify({'success': True, 'message': 'User logged in'})
+        return redirect('/grind')
     else:
         return jsonify({'success': False, 'message': 'Email not in database'})
 
