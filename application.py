@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, jsonify, json
 import boto
 
-from db.space import SpaceController
+from db.space_controller import SpaceController
 from db.booking_controller import BookingController
 from db.user_controller import UserController
 from db.setup import setup_connection
