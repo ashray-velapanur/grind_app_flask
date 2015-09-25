@@ -3,6 +3,7 @@ import boto
 
 from db.space import SpaceController
 from db.booking_controller import BookingController
+from db.user_controller import UserController
 from db.setup import setup_connection
 
 # print a nice greeting.
@@ -104,6 +105,13 @@ def booking_create_handler():
     controller = BookingController()
     controller.create_booking(space_id, room_id)
     return redirect("/bookings")
+
+@application.route('/users/signup', methods=["POST"])
+def user_signup_handler():
+    email = request.form['email']
+    name = request.form['name']
+    controller = UserController()
+    controller.create_user(email, name)
 
 # run the app.
 if __name__ == "__main__":
