@@ -1,7 +1,7 @@
 from boto.dynamodb2.fields import HashKey, RangeKey
 from boto.dynamodb2.items   import Item
 from boto.dynamodb2.table   import Table
-from boto.dynamodb2.exceptions import JSONResponseError
+from boto.dynamodb2.exceptions import JSONResponseError, ItemNotFound
 from db.setup import setup_connection
 
 class UserController:
@@ -24,3 +24,10 @@ class UserController:
 		item = Item(table, data={'email': email, 'name': name})
 		item.save()
 		return item
+
+	def get_user(self, email):
+		table = self.get_users_table()
+		try:
+			return table.get_item(email=email)
+		except ItemNotFound:
+			return None

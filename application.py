@@ -1,10 +1,13 @@
-from flask import Flask, render_template, request, redirect, jsonify, json
+from flask import Flask, render_template, request, redirect, json, session, jsonify
 import boto
+
+from uuid import uuid4
 
 from db.space_controller import SpaceController
 from db.booking_controller import BookingController
 from db.user_controller import UserController
 from db.setup import setup_connection
+
 
 # print a nice greeting.
 def say_hello(username = "World"):
@@ -22,6 +25,7 @@ footer_text = '</body>\n</html>'
 
 # EB looks for an 'application' callable by default.
 application = Flask(__name__)
+application.secret_key = str(uuid4())
 
 # # add a rule for the index page.
 # application.add_url_rule('/', 'index', (lambda: header_text +
@@ -112,6 +116,21 @@ def user_signup_handler():
     name = request.form['name']
     controller = UserController()
     controller.create_user(email, name)
+
+@application.route('/users/login', methods=["POST"])
+def user_login_handler():
+    email = request.form['email']
+    controller = UserController()
+    user = controller.get_user(email)
+    if user:
+        session['email'] = email
+        return jsonify({'success': True})
+    else:
+        return jsonify({'success': False})
+
+@application.route('/users/current_user')
+def current_user_handler():
+    return jsonify(session)
 
 # run the app.
 if __name__ == "__main__":
