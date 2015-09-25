@@ -155,7 +155,8 @@ def user_login_handler():
 
 @application.route('/users/logout')
 def user_logout_handler():
-    session["email"] = None
+    session.pop("email", None)
+    return redirect('/')
 
 @application.route('/users/current_user')
 def current_user_handler():
