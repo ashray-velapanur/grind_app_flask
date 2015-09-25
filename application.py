@@ -8,6 +8,8 @@ from db.booking_controller import BookingController
 from db.user_controller import UserController
 from db.setup import setup_connection
 from third_party.recurly_api import RecurlyAPI
+import recurly
+from recurly import Account, Transaction, BillingInfo
 
 
 # print a nice greeting.
@@ -36,6 +38,10 @@ application.secret_key = str(uuid4())
 # # URL.
 # application.add_url_rule('/<username>', 'hello', (lambda username:
 #     header_text + say_hello(username) + home_link + footer_text))
+
+recurly.SUBDOMAIN = 'beagles'
+recurly.API_KEY = '413a664bcd874f4fb2b17b68dd1cbf8c'
+recurly.DEFAULT_CURRENCY = 'USD'
 
 @application.route('/')
 @application.route('/index', methods=["GET", "POST"])
@@ -121,14 +127,30 @@ def test():
 @application.route('/bookings/create', methods=["POST"])
 def booking_create_handler():
     print "In booking create"
-    form = request.form
-    space_id = form['space_id']
-    room_id = form['room_id']
-    print space_id
-    print room_id
-    controller = BookingController()
-    controller.create_booking(space_id, room_id)
-    return redirect("/bookings")
+    user = UserController().get_user(session['email']) if 'email' in session else None
+    if user:
+        form = request.form
+        space_id = form['space_id']
+        room_id = form['room_id']
+        print space_id
+        print room_id
+        controller = BookingController()
+        account = Account.get(user['email'])
+        print '######'
+        print account
+        print account.email
+        print 'Token: '+form['recurly-token']
+        account.billing_info = BillingInfo(token_id = form['recurly-token'])
+        account.save()
+        transaction = Transaction(
+          amount_in_cents=int(form['amount'])*100,
+          currency='INR',
+          account=Account(account_code=user['email'])
+        )
+        transaction.save()
+        if transaction.status == 'success':
+            controller.create_booking(space_id, room_id)
+        return redirect("/bookings")
 
 @application.route('/users/signup', methods=["POST"])
 def user_signup_handler():
