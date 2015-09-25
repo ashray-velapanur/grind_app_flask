@@ -129,6 +129,10 @@ def user_login_handler():
     else:
         return jsonify({'success': False, 'message': 'Email not in database'})
 
+@application.route('/users/logout')
+def user_logout_handler():
+    session["email"] = None
+
 @application.route('/users/current_user')
 def current_user_handler():
     return jsonify(session)
