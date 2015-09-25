@@ -3,31 +3,15 @@ from boto.dynamodb2.items   import Item
 from boto.dynamodb2.table   import Table
 from boto.dynamodb2.exceptions import JSONResponseError, ItemNotFound
 from db.setup import setup_connection
+from db.db_controller import DbController
 
-class UserController:
-	def __init__(self, connection=setup_connection()):
-		self.connection = connection
-	
-	def get_users_table(self):
-		return Table("Users", connection=self.connection)
+class UserController(DbController):
+	def __init__(self):
+		DbController.__init__(self, "Users", "email")
 
-	def get_or_create_user(self): #fix this!
+	def get_item(self, email):
+		table = self.get_table()
 		try:
-			status = self.connection.describe_table("Users")['Table']['TableStatus']
-			if status == "ACTIVE":
-				return self.get_users_table()
-		except JSONResponseError:
-			return Table.create('Users', schema=[HashKey('email')], connection=self.connection);
-
-	def create_user(self, email, first_name, last_name):
-		table = self.get_or_create_user()
-		item = Item(table, data={'email': email, 'first_name': first_name, 'last_name': last_name})
-		item.save()
-		return item
-
-	def get_user(self, email):
-		table = self.get_users_table()
-		try:
-			return table.get_item(email=email)
+			return table.query_2(email__eq=email).next()
 		except ItemNotFound:
 			return None
