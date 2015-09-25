@@ -132,20 +132,14 @@ def booking_create_handler():
         form = request.form
         space_id = form['space_id']
         room_id = form['room_id']
-        print space_id
-        print room_id
         controller = BookingController()
         account = Account.get(user['email'])
-        print '######'
-        print account
-        print account.email
-        print 'Token: '+form['recurly-token']
         account.billing_info = BillingInfo(token_id = form['recurly-token'])
         account.save()
         transaction = Transaction(
           amount_in_cents=int(form['amount'])*100,
           currency='INR',
-          account=Account(account_code=user['email'])
+          account=account
         )
         transaction.save()
         if transaction.status == 'success':
