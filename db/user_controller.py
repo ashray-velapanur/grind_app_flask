@@ -19,9 +19,9 @@ class UserController:
 		except JSONResponseError:
 			return Table.create('Users', schema=[HashKey('email')], connection=self.connection);
 
-	def create_user(self, email, name):
+	def create_user(self, email, first_name, last_name):
 		table = self.get_or_create_user()
-		item = Item(table, data={'email': email, 'name': name})
+		item = Item(table, data={'email': email, 'first_name': first_name, 'last_name': last_name})
 		item.save()
 		return item
 

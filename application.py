@@ -113,9 +113,10 @@ def booking_create_handler():
 @application.route('/users/signup', methods=["POST"])
 def user_signup_handler():
     email = request.form['email']
-    name = request.form['name']
+    first_name = request.form['first_name']
+    last_name = request.form['last_name']
     controller = UserController()
-    controller.create_user(email, name)
+    controller.create_user(email, first_name, last_name)
 
 @application.route('/users/login', methods=["POST"])
 def user_login_handler():
