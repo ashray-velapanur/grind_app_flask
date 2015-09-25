@@ -124,9 +124,9 @@ def user_login_handler():
     user = controller.get_user(email)
     if user:
         session['email'] = email
-        return jsonify({'success': True})
+        return jsonify({'success': True, 'message': 'User logged in'})
     else:
-        return jsonify({'success': False})
+        return jsonify({'success': False, 'message': 'Email not in database'})
 
 @application.route('/users/current_user')
 def current_user_handler():
