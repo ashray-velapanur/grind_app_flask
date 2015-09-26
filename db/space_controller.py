@@ -3,57 +3,35 @@ from boto.dynamodb2.items   import Item
 from boto.dynamodb2.table   import Table
 from boto.dynamodb2.exceptions import JSONResponseError
 from db.setup import setup_connection
+from db.db_controller import DbController
 
-class SpaceController:
-	def __init__(self, connection=setup_connection()):
-		self.connection = connection
-	
-	def get_spaces_table(self):
-		return Table("Spaces", connection=self.connection)
+class SpaceController(DbController):
+	def __init__(self):
+		DbController.__init__(self, "Spaces", "space_id")
 
-	def get_rooms_table(self):
-		return Table("Rooms", connection=self.connection)
-
-	def get_or_create_space(self): #fix this!
+	def get_item(self, space_id):
+		table = self.get_table()
 		try:
-			status = self.connection.describe_table("Spaces")['Table']['TableStatus']
-			if status == "ACTIVE":
-				return self.get_spaces_table()
-		except JSONResponseError:
-			return Table.create('Spaces', schema=[HashKey('space_id')], connection=self.connection);
-		
-	def get_or_create_room(self): #fix this!
+			return table.query_2(space_id__eq=space_id).next()
+		except ItemNotFound:
+			return None
+
+	def get_items(self, space_id=None):
+		return self.get_table().scan()
+
+class RoomController(DbController):
+	def __init__(self):
+		DbController.__init__(self, "Rooms", "space_id", range_key="room_id")
+
+	def get_item(self, space_id, room_id):
+		table = self.get_table()
 		try:
-			status = self.connection.describe_table("Rooms")['Table']['TableStatus']
-			if status == "ACTIVE":
-				return self.get_rooms_table()
-		except JSONResponseError:
-			return Table.create('Rooms', schema=[HashKey('space_id'), RangeKey('room_id')], connection=self.connection);
+			return table.query_2(space_id__eq=space_id, room_id__eq=room_id).next()
+		except ItemNotFound:
+			return None
 
-	def create_space(self, name, address, city, state, zip, phone):
-		table = self.get_or_create_space()
-		item = Item(table, data={'space_id': name.lower().replace(' ', '_'), 'name': name, 'address': address, 'city': city, 'state': state, 'zip': zip, 'phone': phone})
-		item.save()
-		return item
-
-	def create_room(self, space, name, size, amenities_list, price):
-		table = self.get_or_create_room()
-		space_id = space['space_id']
-		item = Item(table, data={'space_id': space_id, 'room_id': name.lower().replace(' ', '_'), 'name': name, 'size': size, 'amenities': amenities_list, 'price': price})
-		item.save()
-		return item
-
-	def get_spaces(self, space_id=None):
-		if space_id:
-			return self.get_spaces_table().query_2(space_id__eq=space_id).next()
-		else:
-			return self.get_spaces_table().scan()
-
-	def get_rooms(self, space, room_id=None):
+	def get_items(self, space_id, room_id=None):
 		if room_id:
-			return self.get_rooms_table().query_2(space_id__eq=space['space_id'], room_id__eq=room_id).next()
+			return self.get_table().query_2(space_id__eq=space_id, room_id__eq=room_id).next()
 		else:
-			return self.get_rooms_table().query_2(space_id__eq=space['space_id'])
-
-
-
+			return self.get_table().query_2(space_id__eq=space_id).next()

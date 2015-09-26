@@ -30,3 +30,6 @@ class DbController(object):
 
 	def get_item(self):
 		pass
+
+	def get_items(self):
+		pass

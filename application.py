@@ -3,7 +3,7 @@ import boto
 
 from uuid import uuid4
 
-from db.space_controller import SpaceController
+from db.space_controller import SpaceController, RoomController
 from db.booking_controller import BookingController
 from db.user_controller import UserController
 from db.setup import setup_connection
@@ -58,7 +58,7 @@ def index():
 def grind():
     print 'In grind page'
     controller = SpaceController()
-    spaces = controller.get_spaces()
+    spaces = controller.get_items()
     userController = UserController()
     user = userController.get_item(session['email']) if 'email' in session else None
     return render_template("grind.html", spaces=spaces, user=user)
@@ -66,23 +66,25 @@ def grind():
 @application.route('/rooms', methods=["GET", "POST"])
 def rooms():
     print 'In rooms page'
-    controller = SpaceController()
+    space_controller = SpaceController()
+    room_controller = RoomController()
     args = request.args
     space_id = args.get('space', '')
-    space = controller.get_spaces(space_id=space_id)
-    rooms = controller.get_rooms(space)
+    space = space_controller.get_items(space_id=space_id)
+    rooms = room_controller.get_items(space)
     user = UserController().get_item(session['email']) if 'email' in session else None
     return render_template("rooms.html", space=space, rooms=rooms, user=user)
 
 @application.route('/book', methods=["GET", "POST"])
 def book():
     print 'In book page'
-    controller = SpaceController()
+    space_controller = SpaceController()
+    room_controller = RoomController()
     args = request.args
     space_id = args.get('space', '')
     room_id = args.get('room', '')
-    space = controller.get_spaces(space_id=space_id)
-    room = controller.get_rooms(space, room_id=room_id)
+    space = space_controller.get_item(space_id)
+    room = room_controller.get_item(space, room_id)
     user = UserController().get_item(session['email']) if 'email' in session else None
     return render_template("book.html", space=space, room=room, user=user)
 
@@ -96,21 +98,24 @@ def bookings():
 
 @application.route('/setup_data')
 def setup_data():
-    controller = SpaceController()
+    space_controller = SpaceController()
+    room_controller = RoomController()
 
-    space = controller.create_space('Grind Broadway', '1412 Broadway, 22nd Fl', 'New York', 'NY', '10018', '(646) 558 - 6026')
-    controller.create_room(space, 'Play Tank', 5, 'WiFi, Whiteboard, Coffee/Tea, Filtered Water, Print/Scan/Copy ($), Phone, TV/Monitor, Wired Internet', 10)
-    controller.create_room(space, 'Shark Tank', 18, 'WiFi, Whiteboard, Wired Internet, Coffee/Tea, Filtered Water, Print/Scan/Copy ($), Phone, TV/Monitor, Video Conference',25)
-    controller.create_room(space, 'Work Tank', 5, 'WiFi, Whiteboard, Coffee/Tea, Filtered Water, Print/Scan/Copy ($), Phone,TV/Monitor, Wired Internet', 10)
+    space = space_controller.create_item(space_id='grind_broadway', name='Grind Broadway', address='1412 Broadway, 22nd Fl', city='New York', state='NY', zip='10018', phone='(646) 558 - 6026')
+    room_controller.create_item(space_id=space['space_id'], room_id='play_tank', name='Play Tank', size=5, amenities_list='WiFi, Whiteboard, Coffee/Tea, Filtered Water, Print/Scan/Copy ($), Phone, TV/Monitor, Wired Internet', price=10)
+    room_controller.create_item(space_id=space['space_id'], room_id='shark_tank', name='Shark Tank', size=18, amenities_list='WiFi, Whiteboard, Wired Internet, Coffee/Tea, Filtered Water, Print/Scan/Copy ($), Phone, TV/Monitor, Video Conference', price=25)
+    room_controller.create_item(space_id=space['space_id'], room_id='work_tank', name='Work Tank', size=5, amenities_list='WiFi, Whiteboard, Coffee/Tea, Filtered Water, Print/Scan/Copy ($), Phone,TV/Monitor, Wired Internet', price=10)
 
+    '''
     space = controller.create_space('Grind Park', '419 Park Avenue South, 2nd Fl', 'New York', 'NY', '10016', '(646) 558 - 3250')
-    controller.create_room(space, 'Think Tank', 10, 'WiFi, TV/Monitor, Whiteboard, Coffee/Tea, Filtered Water, Print/Scan/Copy ($), Phone, Wired Internet',15)
+    controller.create_room(space['space_id'], 'Think Tank', 10, 'WiFi, TV/Monitor, Whiteboard, Coffee/Tea, Filtered Water, Print/Scan/Copy ($), Phone, Wired Internet',15)
 
     space = controller.create_space('Grind LaSalle', '2 N. LaSalle Street', 'Chicago', 'IL', '60602', '(312) 488 - 4887')
-    controller.create_room(space, 'Do Tank', 8, 'WiFi, TV/Monitor, Whiteboard, Wired Internet, Accessibility, Coffee/Tea, Filtered Water, On-site Restaurant, Print/Scan/Copy', 12)
-    controller.create_room(space, 'Play Tank', 4, 'WiFi, TV/Monitor, Whiteboard, Accessibility, Coffee/Tea, Filtered Water, Wired Internet, On-site Restaurant, Print/Scan/Copy', 8)
-    controller.create_room(space, 'Think Tank', 8, 'WiFi, TV/Monitor, Whiteboard, Wired Internet, Accessibility, Coffee/Tea, Filtered Water, On-site Restaurant, Print/Scan/Copy', 12)
-    controller.create_room(space, 'Work Tank', 4, 'WiFi, Whiteboard, Accessibility, Coffee/Tea, Filtered Water, Wired Internet, On-site Restaurant, Print/Scan/Copy', 8)
+    controller.create_room(space['space_id'], 'Do Tank', 8, 'WiFi, TV/Monitor, Whiteboard, Wired Internet, Accessibility, Coffee/Tea, Filtered Water, On-site Restaurant, Print/Scan/Copy', 12)
+    controller.create_room(space['space_id'], 'Play Tank', 4, 'WiFi, TV/Monitor, Whiteboard, Accessibility, Coffee/Tea, Filtered Water, Wired Internet, On-site Restaurant, Print/Scan/Copy', 8)
+    controller.create_room(space['space_id'], 'Think Tank', 8, 'WiFi, TV/Monitor, Whiteboard, Wired Internet, Accessibility, Coffee/Tea, Filtered Water, On-site Restaurant, Print/Scan/Copy', 12)
+    controller.create_room(space['space_id'], 'Work Tank', 4, 'WiFi, Whiteboard, Accessibility, Coffee/Tea, Filtered Water, Wired Internet, On-site Restaurant, Print/Scan/Copy', 8)
+    '''
     user = UserController().get_item(session['email']) if 'email' in session else None
     return redirect('/', user=user)
  
