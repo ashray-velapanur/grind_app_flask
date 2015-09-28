@@ -1,7 +1,7 @@
 from boto.dynamodb2.fields import HashKey, RangeKey
 from boto.dynamodb2.items   import Item
 from boto.dynamodb2.table   import Table
-from boto.dynamodb2.exceptions import JSONResponseError
+from boto.dynamodb2.exceptions import JSONResponseError, ItemNotFound
 from db.setup import setup_connection
 from db.db_controller import DbController
 

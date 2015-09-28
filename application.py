@@ -71,7 +71,7 @@ def rooms():
     args = request.args
     space_id = args.get('space', '')
     space = space_controller.get_items(space_id=space_id)
-    rooms = room_controller.get_items(space)
+    rooms = room_controller.get_items(space_id=space_id)
     user = UserController().get_item(session['email']) if 'email' in session else None
     return render_template("rooms.html", space=space, rooms=rooms, user=user)
 

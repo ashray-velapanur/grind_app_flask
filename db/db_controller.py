@@ -27,7 +27,7 @@ class DbController(object):
 		item = Item(table, data=kwargs)
 		item.save()
 		return item
-
+	
 	def get_item(self):
 		pass
 
