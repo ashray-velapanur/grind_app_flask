@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+    <div class="container">
+        <div style="padding-top:10px">
+            <center>
+                <h1>
+                    CREATE EVENT
+                </h1>
+            </center>
+        </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+            <p id="errors"></p>
+            <form action="/event/create" method="post">
+                <div>NAME: <input type="text" name="name"></div>
+                <div>START TIME: <input type="datetime-local" name="start"></div>
+                <div>END TIME: <input type="datetime-local" name="end"></div>
+                <input type="submit" value="CREATE NOW">
+            </form>
+        </div>
+      </div>
+    </div> 
+</div>
+{% endblock %}

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, json, session, jsonify
 import boto
-
+import requests
 from uuid import uuid4
 
 from db.space_controller import SpaceController, RoomController
@@ -182,6 +182,69 @@ def user_logout_handler():
 @application.route('/users/current_user')
 def current_user_handler():
     return jsonify(session)
+
+@application.route('/venue/create')
+def create_venue_handler():
+    response = requests.post(
+        "https://www.eventbriteapi.com/v3/venues/",
+        headers = {
+            "Authorization": "Bearer WWVNO7GS2EN36S5JDLS3",
+        },
+        verify = False,  # Verify SSL certificate,
+        data = {'venue.name':'Grind Park',
+                'venue.address.latitude':'37.78',
+                'venue.address.longitude':'-122.4',
+                "venue.address.address_1": "Apartment 106",
+                "venue.address.address_2": "45 Royal Street",
+                "venue.address.city": "London",
+                "venue.address.region": "London",
+                "venue.address.postal_code": "SW1A 1AA",
+                "venue.address.country": "GB"
+                }
+    )
+    print response.json()
+
+@application.route('/event/create', methods=["GET"])
+def create_event_page_handler():
+    print 'In create event page'
+    userController = UserController()
+    user = userController.get_item(session['email']) if 'email' in session else None
+    return render_template("create_event.html")
+
+@application.route('/event/create', methods=["POST"])
+def create_event_handler():
+    print request.form['start']+':00Z'
+    print request.form['end']+':00Z'
+    response = requests.post(
+        "https://www.eventbriteapi.com/v3/events/",
+        headers = {
+            "Authorization": "Bearer WWVNO7GS2EN36S5JDLS3",
+        },
+        verify = False,  # Verify SSL certificate,
+        data = {'event.name.html':request.form['name'],
+                'event.start.utc':request.form['start']+':00Z',
+                'event.start.timezone':'America/New_York',
+                "event.end.utc":request.form['end']+':00Z',
+                "event.end.timezone": "America/New_York",
+                "event.currency": "USD",
+                "event.venue_id":"11584742"
+                }
+    )
+    print response.json()
+    return redirect('/')
+
+@application.route('/event/list', methods=["GET"])
+def list_event_handler():
+    response = requests.get(
+        "https://www.eventbriteapi.com/v3/events/search",
+        headers = {
+            "Authorization": "Bearer WWVNO7GS2EN36S5JDLS3",
+        },
+        verify = False,  # Verify SSL certificate,
+        data = {'user.id':"115769153821"}
+    )
+    events = response.json()['events']
+    return render_template("events.html", events=events)
 
 # run the app.
 if __name__ == "__main__":
