@@ -92,7 +92,7 @@ def book():
 def bookings():
     print 'In bookings page'
     controller = BookingController()
-    bookings = controller.get_bookings()
+    bookings = controller.get_items()
     user = UserController().get_item(session['email']) if 'email' in session else None
     return render_template("bookings.html", bookings=bookings, user=user)
 
@@ -148,7 +148,7 @@ def booking_create_handler():
         )
         transaction.save()
         if transaction.status == 'success':
-            controller.create_booking(space_id, room_id)
+            controller.create_item(space_id=space_id, room_id=room_id)
         return redirect("/bookings")
 
 @application.route('/users/signup', methods=["POST"])
@@ -157,7 +157,7 @@ def user_signup_handler():
     first_name = request.form['first_name']
     last_name = request.form['last_name']
     controller = UserController()
-    controller.create_item(email, first_name, last_name)
+    controller.create_item(email=email, first_name=first_name, last_name=last_name)
     session['email'] = email
     recurlyapi = RecurlyAPI()
     recurlyapi.create_account(email, email, first_name, last_name)
