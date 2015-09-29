@@ -87,7 +87,9 @@ def book():
     space = space_controller.get_item(space_id)
     room = room_controller.get_item(space_id, room_id)
     user = UserController().get_item(session['email']) if 'email' in session else None
-    return render_template("book.html", space=space, room=room, user=user)
+    date = datetime.datetime.today().strftime("%Y-%m-%d")
+    print date
+    return render_template("book.html", space=space, room=room, user=user, date=date)
 
 @application.route('/bookings', methods=["GET", "POST"])
 def bookings():
@@ -144,6 +146,10 @@ def booking_create_handler():
         form = request.form
         space_id = form['space_id']
         room_id = form['room_id']
+        date = form['date']
+        start = form['start']
+        end = form['end']
+        print date, start, end
         controller = BookingController()
         account = Account.get(user['email'])
         account.billing_info = BillingInfo(token_id = form['recurly-token'])
@@ -155,7 +161,7 @@ def booking_create_handler():
         )
         transaction.save()
         if transaction.status == 'success':
-            controller.create_item(space_id=space_id, room_id=room_id)
+            create_booking(space_id=space_id, room_id=room_id, date=date, start_time=start, end_time=end)
         return redirect("/bookings")
 
 @application.route('/users/signup', methods=["POST"])
@@ -252,6 +258,20 @@ def list_event_handler():
     )
     events = response.json()['events']
     return render_template("events.html", events=events)
+
+def create_booking(space_id, room_id, date, start_time, end_time):
+    bookings = BookingController()
+    slots = SlotsController()
+    start = datetime.datetime.strptime(date+' '+start_time, '%Y-%m-%d %H:%M')
+    end = datetime.datetime.strptime(date+' '+end_time, '%Y-%m-%d %H:%M')
+    print start, end
+    booking_id = '%s %s'%(space_id, room_id)
+    bookings.create_item(booking_id=booking_id, start_time=start.strftime('%Y-%m-%d %H:%M'))
+    while start < end:
+        time = start.strftime('%Y-%m-%d %H:%M')
+        slot_id = '%s %s'%(space_id, room_id)
+        start = start + datetime.timedelta(hours=1)
+        slots.create_item(slot_id=slot_id, start_time=time)
 
 # run the app.
 if __name__ == "__main__":

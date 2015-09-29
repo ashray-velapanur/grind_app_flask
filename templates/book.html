@@ -55,7 +55,11 @@
                 <input type="hidden" name="room_id" value="{{room.room_id}}">
                 <input data-recurly="token" name="recurly-token" type="hidden">
                 <input type="hidden" name="amount" value="{{room.price}}">
-                AMOUNT TO CHARGE: ${{room.price}}
+                <div>DATE: <input type="date" name="date" value="{{date}}"></div>
+                <div>START TIME: <input type="time" name="start"></div>
+                <div>END TIME: <input type="time" name="end"></div><br>
+                AMOUNT TO CHARGE: ${{room.price}}<br><br>
+                PLEASE ENTER YOUR PAYMENT INFORMATION
                 <div class="row customer-fields--name">
                     <div class="form-input form-input__first_name">
                         <label for="first_name">First Name</label><input data-recurly="first_name" id="first_name" name="first-name" type="text">
