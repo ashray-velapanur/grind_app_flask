@@ -4,13 +4,14 @@ import requests
 from uuid import uuid4
 
 from db.space_controller import SpaceController, RoomController
-from db.booking_controller import BookingController
+from db.booking_controller import BookingController, SlotsController
 from db.user_controller import UserController
 from db.setup import setup_connection
 from third_party.recurly_api import RecurlyAPI
 import recurly
 from recurly import Account, Transaction, BillingInfo
 
+import datetime
 
 # print a nice greeting.
 def say_hello(username = "World"):
@@ -121,13 +122,19 @@ def setup_data():
  
 @application.route('/test')
 def test():
-    controller = SpaceController()
-    for space in controller.get_spaces():
-        for room in controller.get_rooms(space):
-            booking_controller = BookingController()
-            booking_controller.create_booking(space, room)
-    user = UserController().get_item(session['email']) if 'email' in session else None
-    return redirect('/', user=user)
+    bookings = BookingController()
+    slots = SlotsController()
+    space_id = 'space_id'
+    room_id = 'room_id'
+    start_time = datetime.datetime.strptime('2015-09-29 16:00', '%Y-%m-%d %H:%M')
+    end_time = datetime.datetime.strptime('2015-09-29 20:00', '%Y-%m-%d %H:%M')
+    booking_id = '%s %s'%(space_id, room_id)
+    bookings.create_item(booking_id=booking_id, start_time=start_time.strftime('%Y-%m-%d %H:%M'))
+    while start_time < end_time:
+        time = start_time.strftime('%Y-%m-%d %H:%M')
+        slot_id = '%s %s'%(space_id, room_id)
+        start_time = start_time + datetime.timedelta(hours=1)
+        slots.create_item(slot_id=slot_id, start_time=time)
 
 @application.route('/bookings/create', methods=["POST"])
 def booking_create_handler():
