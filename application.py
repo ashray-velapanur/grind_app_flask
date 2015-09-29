@@ -236,12 +236,12 @@ def create_event_handler():
 @application.route('/event/list', methods=["GET"])
 def list_event_handler():
     response = requests.get(
-        "https://www.eventbriteapi.com/v3/events/search",
+        "https://www.eventbriteapi.com/v3/users/115769153821/owned_events/",
         headers = {
             "Authorization": "Bearer WWVNO7GS2EN36S5JDLS3",
         },
         verify = False,  # Verify SSL certificate,
-        data = {'user.id':"115769153821"}
+        data = {'order_by':"start_asc"}
     )
     events = response.json()['events']
     return render_template("events.html", events=events)
