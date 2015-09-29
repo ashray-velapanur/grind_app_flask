@@ -34,4 +34,4 @@ class RoomController(DbController):
 		if room_id:
 			return self.get_table().query_2(space_id__eq=space_id, room_id__eq=room_id).next()
 		else:
-			return self.get_table().query_2(space_id__eq=space_id).next()
+			return self.get_table().query_2(space_id__eq=space_id)

@@ -70,7 +70,7 @@ def rooms():
     room_controller = RoomController()
     args = request.args
     space_id = args.get('space', '')
-    space = space_controller.get_items(space_id=space_id)
+    space = space_controller.get_item(space_id=space_id)
     rooms = room_controller.get_items(space_id=space_id)
     user = UserController().get_item(session['email']) if 'email' in session else None
     return render_template("rooms.html", space=space, rooms=rooms, user=user)
@@ -84,7 +84,7 @@ def book():
     space_id = args.get('space', '')
     room_id = args.get('room', '')
     space = space_controller.get_item(space_id)
-    room = room_controller.get_item(space, room_id)
+    room = room_controller.get_item(space_id, room_id)
     user = UserController().get_item(session['email']) if 'email' in session else None
     return render_template("book.html", space=space, room=room, user=user)
 
@@ -132,7 +132,7 @@ def test():
 @application.route('/bookings/create', methods=["POST"])
 def booking_create_handler():
     print "In booking create"
-    user = UserController().get_user(session['email']) if 'email' in session else None
+    user = UserController().get_item(session['email']) if 'email' in session else None
     if user:
         form = request.form
         space_id = form['space_id']
