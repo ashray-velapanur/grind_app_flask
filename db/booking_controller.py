@@ -7,7 +7,7 @@ from db.db_controller import DbController
 
 class BookingController(DbController):
 	def __init__(self):
-		DbController.__init__(self, "Spaces", "space_id", range_key="room_id")
+		DbController.__init__(self, "Bookings", "space_id", range_key="room_id")
 	
 	def get_items(self):
 		return self.get_table().scan()
