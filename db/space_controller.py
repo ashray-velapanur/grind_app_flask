@@ -16,7 +16,7 @@ class SpaceController(DbController):
 		except ItemNotFound:
 			return None
 
-	def get_items(self, space_id=None):
+	def get_items(self):
 		return self.get_table().scan()
 
 class RoomController(DbController):
@@ -31,7 +31,4 @@ class RoomController(DbController):
 			return None
 
 	def get_items(self, space_id, room_id=None):
-		if room_id:
-			return self.get_table().query_2(space_id__eq=space_id, room_id__eq=room_id).next()
-		else:
-			return self.get_table().query_2(space_id__eq=space_id)
+		return self.get_table().query_2(space_id__eq=space_id)
