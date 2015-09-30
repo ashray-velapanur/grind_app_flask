@@ -164,6 +164,17 @@ def booking_create_handler():
             create_booking(space_id=space_id, room_id=room_id, date=date, start_time=start, end_time=end)
         return redirect("/bookings")
 
+@application.route('/bookings/check_availability', methods=["POST"])
+def booking_availability_handler():
+    form = request.form
+    space_id = form['space_id']
+    room_id = form['room_id']
+    date = form['date']
+    start = form['start']
+    end = form['end']
+    available = check_availability(space_id=space_id, room_id=room_id, date=date, start_time=start, end_time=end)
+    return jsonify({'available': available})
+
 @application.route('/users/signup', methods=["POST"])
 def user_signup_handler():
     email = request.form['email']
@@ -272,6 +283,20 @@ def create_booking(space_id, room_id, date, start_time, end_time):
         slot_id = '%s %s'%(space_id, room_id)
         start = start + datetime.timedelta(hours=1)
         slots.create_item(slot_id=slot_id, start_time=time)
+
+def check_availability(space_id, room_id, date, start_time, end_time):
+    bookings = BookingController()
+    slots = SlotsController()
+    start = datetime.datetime.strptime(date+' '+start_time, '%Y-%m-%d %H:%M')
+    end = datetime.datetime.strptime(date+' '+end_time, '%Y-%m-%d %H:%M')
+    slot_id = '%s %s'%(space_id, room_id)
+    while start < end:
+        time = start.strftime('%Y-%m-%d %H:%M')
+        start = start + datetime.timedelta(hours=1)
+        slot = slots.get_item(slot_id=slot_id, start_time=time)
+        if slot:
+            return False
+    return True
 
 # run the app.
 if __name__ == "__main__":
