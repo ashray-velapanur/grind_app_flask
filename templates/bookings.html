@@ -24,8 +24,9 @@
                         {% for booking in bookings %}
                             <tr style="border-bottom: 1px solid black;">
                                 <td style="padding:10px 100px 10px 0px;">
-                                    <div> {{booking.booking_id}} </div>
-                                    <div> {{booking.start_time}} </div>
+                                    <div> Booking On: {{booking.booking_id}} </div>
+                                    <div> Start Time: {{booking.start_time}} </div>
+                                    <div> Booking Type: {% if booking.type %}{{booking.type}}{% else %}Unknown{% endif %} </div>
                                 </td>
                             </tr>
                         {% endfor %}
