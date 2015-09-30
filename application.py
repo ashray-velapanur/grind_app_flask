@@ -161,7 +161,7 @@ def booking_create_handler():
         )
         transaction.save()
         if transaction.status == 'success':
-            create_booking(space_id=space_id, room_id=room_id, date=date, start_time=start, end_time=end)
+            create_booking(type='room', space_id=space_id, room_id=room_id, date=date, start_time=start, end_time=end)
         return redirect("/bookings")
 
 @application.route('/bookings/check_availability', methods=["POST"])
@@ -270,14 +270,14 @@ def list_event_handler():
     events = response.json()['events']
     return render_template("events.html", events=events)
 
-def create_booking(space_id, room_id, date, start_time, end_time):
+def create_booking(type, space_id, room_id, date, start_time, end_time):
     bookings = BookingController()
     slots = SlotsController()
     start = datetime.datetime.strptime(date+' '+start_time, '%Y-%m-%d %H:%M')
     end = datetime.datetime.strptime(date+' '+end_time, '%Y-%m-%d %H:%M')
     print start, end
     booking_id = '%s %s'%(space_id, room_id)
-    bookings.create_item(booking_id=booking_id, start_time=start.strftime('%Y-%m-%d %H:%M'))
+    bookings.create_item(type=type, booking_id=booking_id, start_time=start.strftime('%Y-%m-%d %H:%M'), end_time=end.strftime('%Y-%m-%d %H:%M'))
     while start < end:
         time = start.strftime('%Y-%m-%d %H:%M')
         slot_id = '%s %s'%(space_id, room_id)
