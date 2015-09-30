@@ -1,5 +1,40 @@
 {% extends "base.html" %}
 
+{% block script %}
+<script>
+    $(document).ready(function(){
+        $('#availability-form').on('submit', function (event) {
+            var form = this;
+            event.preventDefault();
+            var space_id = form.elements['space_id'].value;
+            var date = form.elements['date'].value;
+            var start = form.elements['start'].value;
+            var end = form.elements['end'].value;
+            console.log(date, start, end);
+            $.post('/bookings/check_availability',{'space_id':space_id,'room_id':'','date':date,'start':start,'end':end}).success(
+                function(data){
+                    if(data.available) {
+                        $('#errors').text('');
+                        $('#availability-form').hide();
+                        $("#event-creation-form [name=date]").val(date);
+                        $("#event-creation-form [name=start]").val(start);
+                        $("#event-creation-form [name=end]").val(end);
+                        $("#event-creation-form [name=space_id]").val(space_id);
+                        $("#event-creation-form #space").text(space_id);
+                        $("#event-creation-form #date").text("DATE: "+date);
+                        $("#event-creation-form #start").text("START TIME: "+start);
+                        $("#event-creation-form #end").text("END TIME: "+end);
+                        $('#event-creation-form').show();
+                    } else {
+                        $('#errors').text('Space already booked during those hours. Pick other times to check availabiltiy');
+                    }
+                }
+            );
+        });
+    });
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="jumbotron">
     <div class="container">
@@ -12,17 +47,41 @@
         </div>
     </div>
     <div class="container">
-      <div class="row">
-        <div class="col-md-4">
-            <p id="errors"></p>
-            <form action="/event/create" method="post">
-                <div>NAME: <input type="text" name="name"></div>
-                <div>START TIME: <input type="datetime-local" name="start"></div>
-                <div>END TIME: <input type="datetime-local" name="end"></div>
-                <input type="submit" value="CREATE NOW">
-            </form>
+        <div class="row">
+            <div class="col-md-4">
+                <form id="availability-form" action="" method="post">
+                    <div>SPACE:
+                        <select name="space_id">
+                            {% if not spaces %}
+                                <option value="">No spaces listed</option>
+                            {% else %}
+                                {% for space in spaces %}
+                                    <option value="{{space.space_id}}">{{space.name}}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div>DATE: <input type="date" name="date"></div>
+                    <div>START TIME: <input type="time" name="start"></div>
+                    <div>END TIME: <input type="time" name="end"></div>
+                    <input type="submit" value="CHECK AVAILABILITY">
+                </form>
+                <p id="errors"></p>
+                <form id="event-creation-form" action="/event/create" method="post" style="display:none">
+                    SPACE AVAILABLE FOR:
+                    <input type="hidden" name="date">
+                    <input type="hidden" name="start">
+                    <input type="hidden" name="end">
+                    <input type="hidden" name="space_id">
+                    <div id="space"></div>
+                    <div id="date">DATE: </div>
+                    <div id="start">START TIME: </div>
+                    <div id="end">END TIME: </div>
+                    <div>EVENT NAME: <input type="text" name="name"></div>
+                    <input type="submit" value="CREATE NOW">
+                </form>
+            </div>
         </div>
-      </div>
     </div> 
 </div>
 {% endblock %}

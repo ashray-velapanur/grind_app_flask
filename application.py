@@ -233,22 +233,31 @@ def create_event_page_handler():
     print 'In create event page'
     userController = UserController()
     user = userController.get_item(session['email']) if 'email' in session else None
-    return render_template("create_event.html")
+    spaceController = SpaceController()
+    spaces = spaceController.get_items()
+    return render_template("create_event.html", user=user, spaces=spaces)
 
 @application.route('/event/create', methods=["POST"])
 def create_event_handler():
-    print request.form['start']+':00Z'
-    print request.form['end']+':00Z'
+    form = request.form
+    print form['date']
+    print form['start']+':00Z'
+    print form['end']+':00Z'
+    space_id = form['space_id']
+    date = form['date']
+    start = form['start']
+    end = form['end']
+    create_booking(type='space', space_id=space_id, room_id="", date=date, start_time=start, end_time=end)
     response = requests.post(
         "https://www.eventbriteapi.com/v3/events/",
         headers = {
             "Authorization": "Bearer WWVNO7GS2EN36S5JDLS3",
         },
         verify = False,  # Verify SSL certificate,
-        data = {'event.name.html':request.form['name'],
-                'event.start.utc':request.form['start']+':00Z',
+        data = {'event.name.html':form['name'],
+                'event.start.utc':form['date']+'T'+form['start']+':00Z',
                 'event.start.timezone':'America/New_York',
-                "event.end.utc":request.form['end']+':00Z',
+                "event.end.utc":form['date']+'T'+form['end']+':00Z',
                 "event.end.timezone": "America/New_York",
                 "event.currency": "USD",
                 "event.venue_id":"11584742"
@@ -276,11 +285,11 @@ def create_booking(type, space_id, room_id, date, start_time, end_time):
     start = datetime.datetime.strptime(date+' '+start_time, '%Y-%m-%d %H:%M')
     end = datetime.datetime.strptime(date+' '+end_time, '%Y-%m-%d %H:%M')
     print start, end
-    booking_id = '%s %s'%(space_id, room_id)
+    booking_id = ('%s %s'%(space_id, room_id)).strip()
     bookings.create_item(type=type, booking_id=booking_id, start_time=start.strftime('%Y-%m-%d %H:%M'), end_time=end.strftime('%Y-%m-%d %H:%M'))
     while start < end:
         time = start.strftime('%Y-%m-%d %H:%M')
-        slot_id = '%s %s'%(space_id, room_id)
+        slot_id = ('%s %s'%(space_id, room_id)).strip()
         start = start + datetime.timedelta(hours=1)
         slots.create_item(slot_id=slot_id, start_time=time)
 
@@ -289,7 +298,7 @@ def check_availability(space_id, room_id, date, start_time, end_time):
     slots = SlotsController()
     start = datetime.datetime.strptime(date+' '+start_time, '%Y-%m-%d %H:%M')
     end = datetime.datetime.strptime(date+' '+end_time, '%Y-%m-%d %H:%M')
-    slot_id = '%s %s'%(space_id, room_id)
+    slot_id = ('%s %s'%(space_id, room_id)).strip()
     while start < end:
         time = start.strftime('%Y-%m-%d %H:%M')
         start = start + datetime.timedelta(hours=1)
