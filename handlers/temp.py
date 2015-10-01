@@ -87,31 +87,6 @@ def setup_data():
     user = UserController().get_item(session['email']) if 'email' in session else None
     return redirect('/', user=user)
 
-def user_signup_handler():
-    email = request.form['email']
-    first_name = request.form['first_name']
-    last_name = request.form['last_name']
-    controller = UserController()
-    controller.create_item(email=email, first_name=first_name, last_name=last_name)
-    session['email'] = email
-    recurlyapi = RecurlyAPI()
-    recurlyapi.create_account(email, email, first_name, last_name)
-    return redirect('/grind')
-
-def user_login_handler():
-    email = request.form['email']
-    controller = UserController()
-    user = controller.get_item(email)
-    if user:
-        session['email'] = email
-        return redirect('/grind')
-    else:
-        return jsonify({'success': False, 'message': 'Email not in database'})
-
-def user_logout_handler():
-    session.pop("email", None)
-    return redirect('/')
-
 def create_venue_handler():
     response = requests.post(
         "https://www.eventbriteapi.com/v3/venues/",
