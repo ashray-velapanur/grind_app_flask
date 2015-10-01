@@ -3,7 +3,7 @@ import boto
 import requests
 from uuid import uuid4
 
-from handlers import temp
+from handlers import temp, bookings
 
 # EB looks for an 'application' callable by default.
 application = Flask(__name__)
