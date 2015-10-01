@@ -3,7 +3,7 @@ import boto
 import requests
 from uuid import uuid4
 
-from handlers import temp, bookings
+from handlers import temp, bookings, users
 
 # EB looks for an 'application' callable by default.
 application = Flask(__name__)
@@ -26,15 +26,15 @@ urls = [
     ('/book', temp.book, ["GET", "POST"]),
     ('/bookings', temp.bookings, ["GET", "POST"]),
     ('/setup_data', temp.setup_data, ["GET"]),
+    ('/venue/create', temp.create_venue_handler, ["GET"]),
     ('/bookings/create', bookings.booking_create_handler, ["POST"]),
     ('/bookings/check_availability', bookings.booking_availability_handler, ["POST"]),
-    ('/users/signup', temp.user_signup_handler, ["POST"]),
-    ('/users/login', temp.user_login_handler, ["POST"]),
-    ('/users/logout', temp.user_logout_handler, ["POST"]),
-    ('/venue/create', temp.create_venue_handler, ["GET"]),
+    ('/users/signup', users.user_signup_handler, ["POST"]),
+    ('/users/login', users.user_login_handler, ["POST"]),
+    ('/users/logout', users.user_logout_handler, ["POST"]),
     ('/event/create', temp.create_event_page_handler, ["GET"]),
-    ('/event/create', temp.create_event_handler, ["POST"]),
-    ('/event/list', temp.list_event_handler, ["GET"]),
+    ('/event/create', bookings.create_event_handler, ["POST"]),
+    ('/event/list', bookings.list_event_handler, ["GET"]),
 ]
 
 for url in urls:
