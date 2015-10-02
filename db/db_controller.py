@@ -31,5 +31,5 @@ class DbController(object):
 	def get_item(self):
 		pass
 
-	def get_items(self):
-		pass
+	def all(self):
+		return self.get_table().scan()
