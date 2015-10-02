@@ -10,25 +10,23 @@ class SpaceController(DbController):
 		DbController.__init__(self, "Spaces", "space_id")
 
 	def get_item(self, space_id):
-		table = self.get_table()
 		try:
-			return table.query_2(space_id__eq=space_id).next()
+			return self.table.query_2(space_id__eq=space_id).next()
 		except ItemNotFound:
 			return None
 
 	def get_items(self):
-		return self.get_table().scan()
+		return self.table.scan()
 
 class RoomController(DbController):
 	def __init__(self):
 		DbController.__init__(self, "Rooms", "space_id", range_key="room_id")
 
 	def get_item(self, space_id, room_id):
-		table = self.get_table()
 		try:
-			return table.query_2(space_id__eq=space_id, room_id__eq=room_id).next()
+			return self.table.query_2(space_id__eq=space_id, room_id__eq=room_id).next()
 		except ItemNotFound:
 			return None
 
 	def get_items(self, space_id, room_id=None):
-		return self.get_table().query_2(space_id__eq=space_id)
+		return self.table.query_2(space_id__eq=space_id)

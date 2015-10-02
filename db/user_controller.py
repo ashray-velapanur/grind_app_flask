@@ -10,8 +10,7 @@ class UserController(DbController):
 		DbController.__init__(self, "Users", "email")
 
 	def get_item(self, email):
-		table = self.get_table()
 		try:
-			return table.query_2(email__eq=email).next()
+			return self.table.query_2(email__eq=email).next()
 		except ItemNotFound:
 			return None
