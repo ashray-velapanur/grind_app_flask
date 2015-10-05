@@ -29,12 +29,14 @@ urls = [
     ('/venue/create', temp.create_venue_handler, ["GET"]),
     ('/bookings/create', bookings.booking_create_handler, ["POST"]),
     ('/bookings/check_availability', bookings.booking_availability_handler, ["POST"]),
+    ('/linkedin/callback', users.linkedin_login_handler, ["GET"]),
     ('/users/signup', users.user_signup_handler, ["POST"]),
     ('/users/login', users.user_login_handler, ["POST"]),
-    ('/users/logout', users.user_logout_handler, ["POST"]),
+    ('/users/logout', users.user_logout_handler, ["GET"]),
+    ('/users/industry', users.get_users_for_industry, ["POST"]),
     ('/event/create', temp.create_event_page_handler, ["GET"]),
     ('/event/create', bookings.create_event_handler, ["POST"]),
-    ('/event/list', bookings.list_event_handler, ["GET"]),
+    ('/event/list', bookings.list_event_handler, ["GET"])
 ]
 
 for url in urls:
