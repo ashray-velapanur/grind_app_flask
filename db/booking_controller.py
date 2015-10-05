@@ -12,6 +12,13 @@ class BookingController(DbController):
 	def get_items(self):
 		return self.table.scan()
 
+	def delete_item(self, boking_id, start_time):
+		table = self.get_table()
+		try:
+			return table.delete_item(booking_id__eq=booking_id, start_time__eq=start_time)
+		except (ItemNotFound):
+			return None
+
 class SlotsController(DbController):
 	def __init__(self):
 		DbController.__init__(self, "Slots", "slot_id", range_key="start_time")
@@ -20,4 +27,11 @@ class SlotsController(DbController):
 		try:
 			return self.table.query_2(slot_id__eq=slot_id, start_time__eq=start_time).next()
 		except (ItemNotFound, StopIteration):
+			return None
+
+	def delete_item(self, slot_id, start_time):
+		table = self.get_table()
+		try:
+			return table.delete_item(slot_id__eq=slot_id, start_time__eq=start_time)
+		except (ItemNotFound):
 			return None
