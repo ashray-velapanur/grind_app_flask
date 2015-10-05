@@ -16,6 +16,20 @@ def create_booking(type, space_id, room_id, date, start_time, end_time):
         start = start + datetime.timedelta(hours=1)
         slots.create_item(slot_id=slot_id, start_time=time)
 
+def delete_booking(type, space_id, room_id, date, start_time, end_time):
+    bookings = BookingController()
+    slots = SlotsController()
+    start = datetime.datetime.strptime(date+' '+start_time, '%Y-%m-%d %H:%M')
+    end = datetime.datetime.strptime(date+' '+end_time, '%Y-%m-%d %H:%M')
+    print start, end
+    booking_id = ('%s %s'%(space_id, room_id)).strip()
+    bookings.delete_item(type=type, booking_id=booking_id, start_time=start.strftime('%Y-%m-%d %H:%M'))
+    while start < end:
+        time = start.strftime('%Y-%m-%d %H:%M')
+        slot_id = ('%s %s'%(space_id, room_id)).strip()
+        start = start + datetime.timedelta(hours=1)
+        slots.delete_item(slot_id=slot_id, start_time=time)
+
 def check_availability(space_id, room_id, date, start_time, end_time):
     bookings = BookingController()
     slots = SlotsController()
