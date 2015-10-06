@@ -3,6 +3,12 @@ import requests
 from db.space_controller import SpaceController, RoomController
 from db.booking_controller import BookingController, SlotsController
 from db.user_controller import UserController
+import datetime, recurly
+from recurly import Account, Transaction, BillingInfo
+
+recurly.SUBDOMAIN = 'beagles'
+recurly.API_KEY = '413a664bcd874f4fb2b17b68dd1cbf8c'
+recurly.DEFAULT_CURRENCY = 'USD'
 
 def create_booking(type, space_id, room_id, date, start_time, end_time):
     bookings = BookingController()
@@ -73,8 +79,10 @@ def booking_create_handler():
 
 def booking_availability_handler():
     form = request.form
+    space_id = room_id = date = start = end = ''
     space_id = form['space_id']
-    room_id = form['room_id']
+    if 'room_id' in form:
+        room_id = form['room_id']
     date = form['date']
     start = form['start']
     end = form['end']
