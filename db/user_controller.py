@@ -21,3 +21,7 @@ class UserController(DbController):
 			return self.table.query_2(industry__eq=industry, index='IndustryIndex')
 		except (ItemNotFound):
 			return None
+
+class ThirdPartyUserController(DbController):
+	def __init__(self):
+		DbController.__init__(self, "ThirdPartyUsers", "email", range_key="network")

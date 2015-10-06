@@ -1,6 +1,6 @@
 from db.space_controller import SpaceController, RoomController
 from db.booking_controller import BookingController, SlotsController
-from db.user_controller import UserController
+from db.user_controller import UserController, ThirdPartyUserController
 import requests
 from third_party.recurly_api import RecurlyAPI
 from flask import Flask, render_template, request, redirect, json, session, jsonify
@@ -47,24 +47,31 @@ def linkedin_login_handler():
         url,
         verify = False,  # Verify SSL certificate,
         data = values
-    )
-    at = response.json()
-    print at
-    profile_response = requests.get('https://api.linkedin.com/v1/people/~:(id,first-name,last-name,headline,picture-url,industry,summary,specialties,positions:(id,title,summary,start-date,end-date,is-current,company:(id,name,type,size,industry,ticker)),educations:(id,school-name,field-of-study,start-date,end-date,degree,activities,notes),associations,interests,num-recommenders,date-of-birth,publications:(id,title,publisher:(name),authors:(id,name),date,url,summary),patents:(id,title,summary,number,status:(id,name),office:(name),inventors:(id,name),date,url),languages:(id,language:(name),proficiency:(level,name)),skills:(id,skill:(name)),certifications:(id,name,authority:(name),number,start-date,end-date),courses:(id,name,number),recommendations-received:(id,recommendation-type,recommendation-text,recommender),honors-awards,three-current-positions,three-past-positions,volunteer,email-address)?format=json', headers={"Authorization" : "Bearer "+at['access_token']}, verify = False)
+    ).json()
+    print '#'*80
+    print response
+    access_token = response['access_token']
+    profile_response = requests.get('https://api.linkedin.com/v1/people/~:(id,first-name,last-name,headline,picture-url,industry,summary,specialties,positions:(id,title,summary,start-date,end-date,is-current,company:(id,name,type,size,industry,ticker)),educations:(id,school-name,field-of-study,start-date,end-date,degree,activities,notes),associations,interests,num-recommenders,date-of-birth,publications:(id,title,publisher:(name),authors:(id,name),date,url,summary),patents:(id,title,summary,number,status:(id,name),office:(name),inventors:(id,name),date,url),languages:(id,language:(name),proficiency:(level,name)),skills:(id,skill:(name)),certifications:(id,name,authority:(name),number,start-date,end-date),courses:(id,name,number),recommendations-received:(id,recommendation-type,recommendation-text,recommender),honors-awards,three-current-positions,three-past-positions,volunteer,email-address)?format=json', headers={"Authorization" : "Bearer "+access_token}, verify = False)
     profile = profile_response.json()
     email = profile['emailAddress']
     first_name = profile['firstName']
     last_name = profile['lastName']
-    controller = UserController()
-    user = controller.get_item(email)
-    print user
-    if not user:
-        user = controller.create_item(email=email, first_name=first_name, last_name=last_name, access_token=at['access_token'], industry=profile['industry'])
-        print 'User Created'
-        recurlyapi = RecurlyAPI()
-        recurlyapi.create_account(email, email, first_name, last_name)
-    session['email'] = email
+    user = create_user(email, first_name, last_name)
+    create_third_party_user(user, 'linkedin', access_token)
+    session['email'] = user['email']
     return redirect('/')
+
+def create_user(email, first_name, last_name):
+    user_controller = UserController()
+    user = user_controller.get_item(email)
+    if not user:
+        user = user_controller.create_item(email=email, first_name=first_name, last_name=last_name)
+        RecurlyAPI().create_account(email, email, first_name, last_name)
+    return user
+
+def create_third_party_user(user, network, access_token):
+    third_party_user_controller = ThirdPartyUserController()
+    third_party_user = third_party_user_controller.create_item(email=user['email'], network=network, access_token=access_token)
 
 def get_users_for_industry():
     industry = request.form['industry']
