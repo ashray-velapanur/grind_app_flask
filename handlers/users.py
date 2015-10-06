@@ -11,14 +11,19 @@ def user_signup_handler():
     first_name = request.form['first_name']
     last_name = request.form['last_name']
     controller = UserController()
-    controller.create_item(email=email, first_name=first_name, last_name=last_name)
-    session['email'] = email
-    recurlyapi = RecurlyAPI()
-    try:
-        recurlyapi.create_account(email, email, first_name, last_name)
-    except ConditionalCheckFailedException:
-        pass
-    return redirect('/grind')
+    user = controller.get_item(email)
+    print user
+    if not user:
+        controller.create_item(email=email, first_name=first_name, last_name=last_name)
+        session['email'] = email
+        recurlyapi = RecurlyAPI()
+        try:
+            recurlyapi.create_account(email, email, first_name, last_name)
+        except ConditionalCheckFailedException:
+            pass
+        return redirect('/grind')
+    else:
+        return redirect('/?message=Email '+email+' is already signed up! Try logging in instead.')
 
 def user_login_handler():
     email = request.form['email']

@@ -13,15 +13,16 @@
     <div class="container">
       <div class="row">
         <div class="col-md-4">
+            <p id="errors">{% if message %}{{message}}{% endif %}</p>
             <button onclick="$('#login-form').hide();$('#signup-form').show();"><h2><b>SIGN UP</b></h2></button>
             <button onclick="$('#signup-form').hide();$('#login-form').show();"><h2><b>LOG IN</b></h2></button>
             <a href="https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id=75z1lnoajxsagn&redirect_uri=https%3A%2F%2Foscarosl-test.appspot.com%2Flinkedin%2Fcallback&state=DCEeFWf45A53sdfKef424&score=r_fullprofile%20r_emailaddress%20w_share"><button><h2><b>LOG IN WITH LINKEDIN</b></h2></button></a>
             <form id="signup-form" class="navbar-form navbar-right" action="/users/signup" method="post" style="display:none;">
                 SIGN UP
                 <div class="form-group">
-                    <input type="text" name="first_name" placeholder="First Name: John" class="form-control">
-                    <input type="text" name="last_name" placeholder="Last Name: Keats" class="form-control">
-                    <input type="email" name="email" placeholder="Email: john.keats@something.com" class="form-control">
+                    <input type="text" name="first_name" placeholder="First Name: John" class="form-control" required>
+                    <input type="text" name="last_name" placeholder="Last Name: Keats" class="form-control" required>
+                    <input type="email" name="email" placeholder="Email: john.keats@something.com" class="form-control" required>
                 </div>
                 <button type="submit" class="btn btn-success">Sign Up</button>
             </form>

@@ -19,8 +19,9 @@ def index():
     print 'In index page'
     userController = UserController()
     user = userController.get_item(session['email']) if 'email' in session else None
+    message = request.args.get('message', None)
     if not user:
-        return render_template("index.html", user=user)
+        return render_template("index.html", user=user, message=message)
     else:
         return redirect('/grind')
 
