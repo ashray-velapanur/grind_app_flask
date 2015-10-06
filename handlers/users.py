@@ -1,7 +1,6 @@
 from db.space_controller import SpaceController, RoomController
 from db.booking_controller import BookingController, SlotsController
 from db.user_controller import UserController
-from boto.dynamodb2.exceptions import ConditionalCheckFailedException
 import requests
 from third_party.recurly_api import RecurlyAPI
 from flask import Flask, render_template, request, redirect, json, session, jsonify
@@ -17,10 +16,7 @@ def user_signup_handler():
         controller.create_item(email=email, first_name=first_name, last_name=last_name)
         session['email'] = email
         recurlyapi = RecurlyAPI()
-        try:
-            recurlyapi.create_account(email, email, first_name, last_name)
-        except ConditionalCheckFailedException:
-            pass
+        recurlyapi.create_account(email, email, first_name, last_name)
         return redirect('/grind')
     else:
         return redirect('/?message=Email '+email+' is already signed up! Try logging in instead.')
@@ -66,10 +62,7 @@ def linkedin_login_handler():
         user = controller.create_item(email=email, first_name=first_name, last_name=last_name, access_token=at['access_token'], industry=profile['industry'])
         print 'User Created'
         recurlyapi = RecurlyAPI()
-        try:
-            recurlyapi.create_account(email, email, first_name, last_name)
-        except ConditionalCheckFailedException:
-            pass
+        recurlyapi.create_account(email, email, first_name, last_name)
     session['email'] = email
     return redirect('/')
 

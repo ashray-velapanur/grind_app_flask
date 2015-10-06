@@ -2,6 +2,7 @@ from config import RECURLY
 import json
 import recurly
 from recurly import Account
+from recurly.errors import ValidationError
 
 class RecurlyAPI(object):
 	def __init__(self, config=RECURLY):
@@ -21,8 +22,11 @@ class RecurlyAPI(object):
 		return {'Accounts': accounts}
 
 	def create_account(self, code, email, first_name, last_name):
-		account = Account(account_code=code)
-		account.email = email
-		account.first_name = first_name
-		account.last_name = last_name
-		account.save()
+		try:
+			account = Account(account_code=code)
+			account.email = email
+			account.first_name = first_name
+			account.last_name = last_name
+			account.save()
+		except ValidationError:
+			pass
