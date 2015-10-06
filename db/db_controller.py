@@ -35,8 +35,6 @@ class DbController(object):
 			return Table.create(self.table_name, schema=schema, global_indexes=global_indexes, connection=self.connection)
 
 	def create_item(self, **kwargs):
-		print '#'*80
-		print kwargs
 		item = Item(self.table, data=kwargs)
 		item.save()
 		return item
