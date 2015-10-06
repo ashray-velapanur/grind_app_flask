@@ -33,6 +33,12 @@ def grind():
     user = userController.get_item(session['email']) if 'email' in session else None
     return render_template("grind.html", spaces=spaces, user=user)
 
+def get_spaces():
+    controller = SpaceController()
+    spaces_res = controller.get_items()
+    spaces = [{'id':space['space_id'],'name':space['name'],'address':space['address'],'city':space['city'],'state':space['state'],'zip':space['zip'],'phone':space['phone']} for space in spaces_res]
+    return json.dumps({'spaces': spaces})
+
 def rooms():
     print 'In rooms page'
     space_controller = SpaceController()
@@ -43,6 +49,14 @@ def rooms():
     rooms = room_controller.get_items(space_id=space_id)
     user = UserController().get_item(session['email']) if 'email' in session else None
     return render_template("rooms.html", space=space, rooms=rooms, user=user)
+
+def get_rooms():
+    space_controller = SpaceController()
+    room_controller = RoomController()
+    space_id = request.form['space_id']
+    rooms_res = room_controller.get_items(space_id=space_id)
+    rooms = [{'id':room['room_id'],'name':room['name'],'size':room['size'],'amenities_list':room['amenities'],'price':room['price']} for room in rooms_res]
+    return json.dumps({'rooms': rooms})
 
 def book():
     print 'In book page'
@@ -65,6 +79,11 @@ def bookings():
     user = UserController().get_item(session['email']) if 'email' in session else None
     return render_template("bookings.html", bookings=bookings, user=user)
 
+def get_bookings():
+    controller = BookingController()
+    bookings_res = controller.get_items()
+    bookings = [{'type':booking['type'],'space_id':booking['booking_id'].split(' ')[0],'room_id':booking['booking_id'].split(' ')[1] if len(booking['booking_id'].split(' ')) > 1 else '','start_time':booking['start_time'],'end_time':booking['end_time']} for booking in bookings_res]
+    return json.dumps({'bookings':bookings})
 
 def setup_data():
     space_controller = SpaceController()
