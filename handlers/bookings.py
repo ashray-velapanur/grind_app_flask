@@ -97,6 +97,10 @@ def booking_availability_handler():
 
 
 def create_event_handler():
+    create_event()
+    return redirect('/')
+
+def create_event():
     form = request.form
     print form['date']
     print form['start']+':00Z'
@@ -117,12 +121,11 @@ def create_event_handler():
                 'event.start.timezone':'America/New_York',
                 "event.end.utc":form['date']+'T'+form['end']+':00Z',
                 "event.end.timezone": "America/New_York",
-                "event.currency": "USD",
-                "event.venue_id":"11584742"
+                "event.currency": "USD"
                 }
     )
     print response.json()
-    return redirect('/')
+    return response.json()
 
 def list_event_handler():
     events = get_events()

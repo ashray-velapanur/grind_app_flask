@@ -40,6 +40,7 @@ urls = [
     ('/users/industry', users.get_users_for_industry, ["POST"]),
     ('/event/create', temp.create_event_page_handler, ["GET"]),
     ('/event/create', bookings.create_event_handler, ["POST"]),
+    ('/events/create', bookings.create_event, ["POST"]),
     ('/events/list', bookings.list_event_handler, ["GET"]),
     ('/events/list', bookings.get_events_handler, ["POST"])
 ]
