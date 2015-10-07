@@ -39,8 +39,17 @@ class DbController(object):
 		item.save()
 		return item
 	
-	def get_item(self):
-		pass
+	def _query(self, **kwargs):
+		try:
+			return self.table.query_2(**kwargs)
+		except (ItemNotFound):
+			return None
+
+	def get(self, **kwargs):
+		try:
+			return self.table.get_item(**kwargs)
+		except (ItemNotFound):
+			return None
 
 	def all(self):
 		return self.get_table().scan()
