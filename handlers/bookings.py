@@ -52,6 +52,10 @@ def check_availability(space_id, room_id, date, start_time, end_time):
             return False
     return True
 
+def booking_create_web_handler():
+    booking_create_handler()
+    return redirect("/bookings")
+
 def booking_create_handler():
     print "In booking create"
     user = UserController().get_item(session['email']) if 'email' in session else None
@@ -73,9 +77,11 @@ def booking_create_handler():
           account=account
         )
         transaction.save()
+        success = False
         if transaction.status == 'success':
             create_booking(type='room', space_id=space_id, room_id=room_id, date=date, start_time=start, end_time=end)
-        return redirect("/bookings")
+            success = True
+        return json.dumps({'success':success})
 
 def booking_availability_handler():
     form = request.form
