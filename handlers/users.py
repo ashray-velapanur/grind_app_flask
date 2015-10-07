@@ -56,22 +56,24 @@ def linkedin_login_handler():
     email = profile['emailAddress']
     first_name = profile['firstName']
     last_name = profile['lastName']
-    user = create_user(email, first_name, last_name)
-    create_third_party_user(user, 'linkedin', access_token, industry=profile['industry'])
+    user = create_user(email, first_name, last_name, industry=profile['industry'])
+    create_third_party_user(user, 'linkedin', access_token)
     session['email'] = user['email']
     return redirect('/')
 
-def create_user(email, first_name, last_name):
+def create_user(email, first_name, last_name, **kwargs):
     user_controller = UserController()
     user = user_controller.get_item(email)
     if not user:
-        user = user_controller.create_item(email=email, first_name=first_name, last_name=last_name)
+        user = user_controller.create_item(email=email, first_name=first_name, last_name=last_name, **kwargs)
         RecurlyAPI().create_account(email, email, first_name, last_name)
     return user
 
 def create_third_party_user(user, network, access_token, **kwargs):
     third_party_user_controller = ThirdPartyUserController()
-    third_party_user = third_party_user_controller.create_item(email=user['email'], network=network, access_token=access_token, **kwargs)
+    tp_user = third_party_user_controller.get_item(user['email'], network)
+    if not tp_user:
+        third_party_user = third_party_user_controller.create_item(email=user['email'], network=network, access_token=access_token, **kwargs)
 
 def get_users_for_industry():
     industry = request.form['industry']

@@ -25,3 +25,10 @@ class UserController(DbController):
 class ThirdPartyUserController(DbController):
 	def __init__(self):
 		DbController.__init__(self, "ThirdPartyUsers", "email", range_key="network")
+
+	def get_item(self, email, network):
+		try:
+			res = self.table.query_2(email__eq=email, network__eq=network)
+			return res.next() if res else None
+		except (ItemNotFound, StopIteration):
+			return None
