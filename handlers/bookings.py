@@ -125,6 +125,14 @@ def create_event_handler():
     return redirect('/')
 
 def list_event_handler():
+    events = get_events()
+    return render_template("events.html", events=events)
+
+def get_events_handler():
+    events = get_events()
+    return json.dumps({'events':events})
+
+def get_events():
     response = requests.get(
         "https://www.eventbriteapi.com/v3/users/115769153821/owned_events/",
         headers = {
@@ -134,4 +142,4 @@ def list_event_handler():
         data = {'order_by':"start_asc"}
     )
     events = response.json()['events']
-    return render_template("events.html", events=events)
+    return events
