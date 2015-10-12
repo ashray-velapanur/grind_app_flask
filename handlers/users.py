@@ -3,6 +3,7 @@ from db.booking_controller import BookingController, SlotsController
 from db.user_controller import UserController, ThirdPartyUserController
 import requests
 from third_party.recurly_api import RecurlyAPI
+from third_party.cobot import CobotAPI
 from flask import Flask, render_template, request, redirect, json, session, jsonify
 
 def user_signup_handler():
@@ -67,6 +68,7 @@ def create_user(email, first_name, last_name, **kwargs):
     if not user:
         user = user_controller.create_item(email=email, first_name=first_name, last_name=last_name, **kwargs)
         RecurlyAPI().create_account(email, email, first_name, last_name)
+        CobotAPI().create_membership(("%s %s")%(first_name, last_name), 'USA')
     return user
 
 def create_third_party_user(user, network, access_token, **kwargs):

@@ -14,3 +14,7 @@ def callback_handler():
 	print '#'*80
 	print 'access_token'
 	print access_token
+
+def create_member_handler():
+	api = CobotAPI()
+	print api.create_membership('new name', 'some country')['id']

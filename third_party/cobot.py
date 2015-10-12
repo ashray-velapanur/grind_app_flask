@@ -27,3 +27,16 @@ class CobotAPI(object):
 		url = "https://www.cobot.me/oauth/access_token?"
 		response = json.loads(urllib2.urlopen(url, data=urllib.urlencode(params)).read())
 		return response['access_token']
+
+	def create_membership(self, name, country):
+		params = {
+			"plan[id]": 'ddf097bfe38f9ac8598a97478f27a9ca',
+			"address[name]": name,
+			"address[country]": country,
+			"access_token": self.access_token
+		}
+		url = "https://grind.cobot.me/api/memberships?"
+		try:
+			return json.loads(urllib2.urlopen(url, data=urllib.urlencode(params)).read())
+		except urllib2.HTTPError as e:
+			return e.read()
