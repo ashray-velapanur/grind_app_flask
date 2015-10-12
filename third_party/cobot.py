@@ -40,3 +40,16 @@ class CobotAPI(object):
 			return json.loads(urllib2.urlopen(url, data=urllib.urlencode(params)).read())
 		except urllib2.HTTPError as e:
 			return e.read()
+
+	def create_booking(self, membership_id, from_time, to_time, title):
+		resource_id = 'd505dac674fb3737dac53d28d04ce3d0'
+		url = "https://grind.cobot.me/api/resources/%s/bookings"%resource_id
+		params = {
+		  "access_token": self.access_token,
+		  "membership_id": membership_id,
+		  "from": from_time,
+		  "to": to_time,
+		  "title": title
+		}
+		response = urllib2.urlopen(url, data=urllib.urlencode(params)).read()
+		return response
