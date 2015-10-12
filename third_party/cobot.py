@@ -51,5 +51,7 @@ class CobotAPI(object):
 		  "to": to_time,
 		  "title": title
 		}
-		response = urllib2.urlopen(url, data=urllib.urlencode(params)).read()
-		return response
+		try:
+			return urllib2.urlopen(url, data=urllib.urlencode(params)).read()
+		except urllib2.HTTPError as e:
+			return e.read()
