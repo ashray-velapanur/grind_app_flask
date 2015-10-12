@@ -58,20 +58,27 @@ def linkedin_login_handler():
     first_name = profile['firstName']
     last_name = profile['lastName']
     user = create_user(email, first_name, last_name, industry=profile['industry'])
-    create_third_party_user(user, 'linkedin', access_token)
+    create_recurly_user(user)
+    cobot_id = create_cobot_user(user)['id']
+    create_third_party_user(user, 'linkedin', access_token=access_token)
+    create_third_party_user(user, 'cobot', id=cobot_id)
     session['email'] = user['email']
     return redirect('/')
+
+def create_recurly_user(user):
+    RecurlyAPI().create_account(user['email'], user['email'], user['first_name'], user['last_name'])
+
+def create_cobot_user(user):
+    return CobotAPI().create_membership(("%s %s")%(user['first_name'], user['last_name']), 'USA')
 
 def create_user(email, first_name, last_name, **kwargs):
     user_controller = UserController()
     user = user_controller.get_item(email)
     if not user:
         user = user_controller.create_item(email=email, first_name=first_name, last_name=last_name, **kwargs)
-        RecurlyAPI().create_account(email, email, first_name, last_name)
-        CobotAPI().create_membership(("%s %s")%(first_name, last_name), 'USA')
     return user
 
-def create_third_party_user(user, network, access_token, **kwargs):
+def create_third_party_user(user, network, access_token=None, **kwargs):
     third_party_user_controller = ThirdPartyUserController()
     tp_user = third_party_user_controller.get_item(user['email'], network)
     if not tp_user:
