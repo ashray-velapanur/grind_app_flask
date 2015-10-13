@@ -47,7 +47,8 @@ urls = [
     ('/cobot/callback', cobot.callback_handler, ["GET"]),
     ('/cobot/create_member', cobot.create_member_handler, ["GET"]),
     ('/cobot/assign_pass', cobot.assign_pass_handler, ["GET"]),
-    ('/cobot/checkin', cobot.checkin_handler, ["GET"])
+    ('/cobot/checkin', cobot.checkin_handler, ["GET"]),
+    ('/cobot/all_checkins', cobot.all_checking_handler, ["GET"])
 ]
 
 for url in urls:

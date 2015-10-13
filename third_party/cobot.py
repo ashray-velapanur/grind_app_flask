@@ -79,6 +79,16 @@ class CobotAPI(object):
 		except urllib2.HTTPError as e:
 			return e.read()
 
+	def all_checkins(self):
+		url = "https://grind.cobot.me/api/check_ins?"
+		params = {
+			"access_token": self.access_token,
+		}
+		try:
+			return urllib2.urlopen(url + urllib.urlencode(params)).read()
+		except urllib2.HTTPError as e:
+			return e.read()		
+
 	def list_bookings(self, membership_id, from_time, to_time):
 		url = "https://grind.cobot.me/api/bookings?membership_id="+membership_id+"&from="+from_time+"&to="+to_time
 		params = {

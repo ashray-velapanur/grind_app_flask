@@ -48,3 +48,6 @@ def assign_pass_handler():
 	membership_id = third_party_user['id'] if third_party_user else None
 	if membership_id:
 		CobotAPI().assign_pass(membership_id, number)
+
+def all_checking_handler():
+	return CobotAPI().all_checkins()
