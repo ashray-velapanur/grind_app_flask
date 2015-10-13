@@ -27,7 +27,7 @@ urls = [
     ('/rooms', temp.get_rooms, ["POST"]),
     ('/book/room', bookings.booking_create_handler, ["POST"]),
     ('/book', temp.book, ["GET", "POST"]),
-    ('/bookings', temp.bookings, ["GET"]),
+    ('/bookings', cobot.bookings_handler, ["GET"]),
     ('/bookings', temp.get_bookings, ["POST"]),
     ('/setup_data', temp.setup_data, ["GET"]),
     ('/venue/create', temp.create_venue_handler, ["GET"]),

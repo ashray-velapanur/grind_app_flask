@@ -2,7 +2,7 @@ import json
 
 import urllib, urllib2
 import json
-import datetime
+import datetime, requests
 
 from config import COBOT
 
@@ -57,7 +57,7 @@ class CobotAPI(object):
 			return e.read()
 
 	def list_bookings(self, membership_id, from_time, to_time):
-		url = "https://grind.cobot.me/api/bookings"
+		url = "https://grind.cobot.me/api/bookings?membership_id="+membership_id+"&from="+from_time+"&to="+to_time
 		params = {
 		  "access_token": self.access_token,
 		  "membership_id": membership_id,
@@ -65,6 +65,13 @@ class CobotAPI(object):
 		  "to": to_time
 		}
 		try:
-			return urllib2.urlopen(url, data=urllib.urlencode(params)).read()
-		except urllib2.HTTPError as e:
+			response = requests.get(
+				url,
+				headers = {
+				    "Authorization": "Bearer "+self.access_token,
+				},
+				verify = False
+			)
+			return response
+		except HTTPError as e:
 			return e.read()
