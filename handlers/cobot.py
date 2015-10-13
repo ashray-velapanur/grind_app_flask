@@ -39,7 +39,7 @@ def checkin_handler():
 	third_party_user = ThirdPartyUserController().get(email=email, network="cobot")
 	membership_id = third_party_user['id'] if third_party_user else None
 	if membership_id:
-		CobotAPI().checkin(membership_id)
+		print CobotAPI().checkin(membership_id)
 	return redirect('/')
 
 def assign_pass_handler():
@@ -48,7 +48,7 @@ def assign_pass_handler():
 	third_party_user = ThirdPartyUserController().get(email=email, network="cobot")
 	membership_id = third_party_user['id'] if third_party_user else None
 	if membership_id:
-		CobotAPI().assign_pass(membership_id, number)
+		print CobotAPI().assign_pass(membership_id, number)
 	return redirect('/')
 
 def all_checking_handler():
