@@ -2,9 +2,10 @@ from flask import render_template, request, redirect, json, session, jsonify
 import requests
 from db.space_controller import SpaceController, RoomController
 from db.booking_controller import BookingController, SlotsController
-from db.user_controller import UserController
+from db.user_controller import UserController, ThirdPartyUserController
 import datetime, recurly
 from recurly import Account, Transaction, BillingInfo
+from third_party.cobot import CobotAPI
 
 recurly.SUBDOMAIN = 'beagles'
 recurly.API_KEY = '413a664bcd874f4fb2b17b68dd1cbf8c'
@@ -79,8 +80,19 @@ def booking_create_handler():
         transaction.save()
         success = False
         if transaction.status == 'success':
-            create_booking(type='room', space_id=space_id, room_id=room_id, date=date, start_time=start, end_time=end)
+            third_party_user_controller = ThirdPartyUserController()
+            tp_user = third_party_user_controller.get_item(user['email'], 'cobot')
+            from_time = datetime.datetime.strptime(date+' '+start, '%Y-%m-%d %H:%M')
+            to_time = datetime.datetime.strptime(date+' '+end, '%Y-%m-%d %H:%M')
+            print from_time, to_time
+            type='room'
+            api = CobotAPI()
+            result = api.create_booking(tp_user['id'], from_time, to_time, type+'_'+space_id+'_'+room_id+'_'+str(from_time)+'_'+str(to_time))
+            print result
+            #create_booking(type='room', space_id=space_id, room_id=room_id, date=date, start_time=start, end_time=end)
             success = True
+            bookings = api.list_bookings(tp_user['id'], from_time, to_time)
+            print bookings
         return json.dumps({'success':success})
 
 def booking_availability_handler():

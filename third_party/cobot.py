@@ -55,3 +55,16 @@ class CobotAPI(object):
 			return urllib2.urlopen(url, data=urllib.urlencode(params)).read()
 		except urllib2.HTTPError as e:
 			return e.read()
+
+	def list_bookings(self, membership_id, from_time, to_time):
+		url = "https://grind.cobot.me/api/bookings"
+		params = {
+		  "access_token": self.access_token,
+		  "membership_id": membership_id,
+		  "from": from_time,
+		  "to": to_time
+		}
+		try:
+			return urllib2.urlopen(url, data=urllib.urlencode(params)).read()
+		except urllib2.HTTPError as e:
+			return e.read()

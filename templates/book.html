@@ -81,7 +81,7 @@
             <h2><b>{{space.name}}</b></h2>
             <h3><b>{{room.name}}</b></h3>
             <p id="errors"></p>
-            <form id="availability-form" action="" method="post">
+            <form id="availability-form" action="" method="post" style="display:none;">
                 <input type="hidden" name="space_id" value="{{space.space_id}}">
                 <input type="hidden" name="room_id" value="{{room.room_id}}">
                 <div>DATE: <input type="date" name="date" value="{{date}}"></div>
@@ -89,18 +89,14 @@
                 <div>END TIME: <input type="time" name="end"></div><br>
                 <input type="submit" value="CHECK AVAILABILITY">
             </form>
-            <form id="booking-form" action="/bookings/create" method="post" style="display:none;">
+            <form id="booking-form" action="/bookings/create" method="post">
                 <input type="hidden" name="space_id" value="{{space.space_id}}">
                 <input type="hidden" name="room_id" value="{{room.room_id}}">
                 <input data-recurly="token" name="recurly-token" type="hidden">
                 <input type="hidden" name="amount" value="{{room.price}}">
-                <input type="hidden" name="date">
-                <input type="hidden" name="start">
-                <input type="hidden" name="end">
-                <div><b>ROOM AVAILABLE FOR</b></div>
-                <div id="date">DATE: </div>
-                <div id="start">START TIME: </div>
-                <div id="end">END TIME: </div><br>
+                <div>DATE: <input type="date" name="date" value="{{date}}"></div>
+                <div>START TIME: <input type="time" name="start"></div>
+                <div>END TIME: <input type="time" name="end"></div><br>
                 AMOUNT TO CHARGE: ${{room.price}}<br><br>
                 PLEASE ENTER YOUR PAYMENT INFORMATION
                 <div class="row customer-fields--name">
