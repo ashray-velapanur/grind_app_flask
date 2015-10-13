@@ -82,6 +82,39 @@
             </p>
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-6">
+            <h2><b>CHECKINS</b></h2>
+            <p>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <form action="/cobot/assign_pass" method="post">
+                                    PASS COUNT: <input type="text" name="number">
+                                    <input type="submit" value="Assign Passes">
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <form action="/cobot/checkin" method="post">
+                                    <br><input type="submit" value="Make Checkin">
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="/cobot/all_checkins">
+                                    <button> List Checkins </button>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </p>
+        </div>
+      </div>
     </div>
 </div>
 {% endblock %}

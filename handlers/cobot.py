@@ -35,19 +35,21 @@ def bookings_handler():
 	return render_template("bookings.html", bookings=bookings_list, user=user)
 
 def checkin_handler():
-	email = request.args.get('email', None)
+	email = session['email']
 	third_party_user = ThirdPartyUserController().get(email=email, network="cobot")
 	membership_id = third_party_user['id'] if third_party_user else None
 	if membership_id:
 		CobotAPI().checkin(membership_id)
+	return redirect('/')
 
 def assign_pass_handler():
-	email = request.args.get('email', None)
-	number = request.args.get('number', None)
+	email = session['email']
+	number = request.form['number']
 	third_party_user = ThirdPartyUserController().get(email=email, network="cobot")
 	membership_id = third_party_user['id'] if third_party_user else None
 	if membership_id:
 		CobotAPI().assign_pass(membership_id, number)
+	return redirect('/')
 
 def all_checking_handler():
 	return CobotAPI().all_checkins()
