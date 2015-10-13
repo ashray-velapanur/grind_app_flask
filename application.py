@@ -45,7 +45,9 @@ urls = [
     ('/events/list', bookings.get_events_handler, ["POST"]),
     ('/cobot/auth', cobot.auth_handler, ["GET"]),
     ('/cobot/callback', cobot.callback_handler, ["GET"]),
-    ('/cobot/create_member', cobot.create_member_handler, ["GET"])
+    ('/cobot/create_member', cobot.create_member_handler, ["GET"]),
+    ('/cobot/assign_pass', cobot.assign_pass_handler, ["GET"]),
+    ('/cobot/checkin', cobot.checkin_handler, ["GET"])
 ]
 
 for url in urls:

@@ -33,3 +33,18 @@ def bookings_handler():
 		for key in booking:
 				print key+' :: '+str(booking[key])
 	return render_template("bookings.html", bookings=bookings_list, user=user)
+
+def checkin_handler():
+	email = request.args.get('email', None)
+	third_party_user = ThirdPartyUserController().get(email=email, network="cobot")
+	membership_id = third_party_user['id'] if third_party_user else None
+	if membership_id:
+		CobotAPI().checkin(membership_id)
+
+def assign_pass_handler():
+	email = request.args.get('email', None)
+	number = request.args.get('number', None)
+	third_party_user = ThirdPartyUserController().get(email=email, network="cobot")
+	membership_id = third_party_user['id'] if third_party_user else None
+	if membership_id:
+		CobotAPI().assign_pass(membership_id, number)
