@@ -10,14 +10,14 @@ def user_signup_handler():
     email = request.form['email']
     first_name = request.form['first_name']
     last_name = request.form['last_name']
-    controller = UserController()
-    user = controller.get_item(email)
+    user = get_user(email)
     print user
     if not user:
-        controller.create_item(email=email, first_name=first_name, last_name=last_name)
-        session['email'] = email
-        recurlyapi = RecurlyAPI()
-        recurlyapi.create_account(email, email, first_name, last_name)
+        user = create_user(email, first_name, last_name)
+        create_recurly_user(user)
+        cobot_id = create_cobot_user(user)['id']
+        create_third_party_user(user, 'cobot', id=cobot_id)
+        session['email'] = user['email']
         return redirect('/grind')
     else:
         return redirect('/?message=Email '+email+' is already signed up! Try logging in instead.')
@@ -57,11 +57,13 @@ def linkedin_login_handler():
     email = profile['emailAddress']
     first_name = profile['firstName']
     last_name = profile['lastName']
-    user = create_user(email, first_name, last_name, industry=profile['industry'])
-    create_recurly_user(user)
-    cobot_id = create_cobot_user(user)['id']
-    create_third_party_user(user, 'linkedin', access_token=access_token)
-    create_third_party_user(user, 'cobot', id=cobot_id)
+    user = get_user(email)
+    if not user:
+        user = create_user(email, first_name, last_name, industry=profile['industry'])
+        create_recurly_user(user)
+        cobot_id = create_cobot_user(user)['id']
+        create_third_party_user(user, 'linkedin', access_token=access_token)
+        create_third_party_user(user, 'cobot', id=cobot_id)
     session['email'] = user['email']
     return redirect('/')
 
@@ -70,6 +72,11 @@ def create_recurly_user(user):
 
 def create_cobot_user(user):
     return CobotAPI().create_membership(("%s %s")%(user['first_name'], user['last_name']), 'USA')
+
+def get_user(email):
+    user_controller = UserController()
+    user = user_controller.get_item(email)
+    return user
 
 def create_user(email, first_name, last_name, **kwargs):
     user_controller = UserController()
