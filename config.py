@@ -11,3 +11,10 @@ COBOT = {
 	'redirect_uri': 'http://oscarosl-test.appspot.com/cobot/callback',
 	'access_token': 'cabd2a01937078974ba4b3a1165f09e4124be0f824074c9f819ff4adeafb39cb'
 }
+
+HUBSPOT = {
+	'client_id': 'cbe8a89d-72fe-11e5-963c-e78f9b100c80',
+	'portal_id': '1713132',
+	'redirect_uri': 'http://oscarosl-test.appspot.com:5000/hubspot/callback',
+	'scope': 'contacts-rw+offline'
+}
