@@ -3,7 +3,7 @@ import boto
 import requests
 from uuid import uuid4
 
-from handlers import temp, bookings, users, cobot
+from handlers import temp, bookings, users, cobot, hubspot
 
 # EB looks for an 'application' callable by default.
 application = Flask(__name__)
@@ -48,7 +48,9 @@ urls = [
     ('/cobot/create_member', cobot.create_member_handler, ["GET"]),
     ('/cobot/assign_pass', cobot.assign_pass_handler, ["POST"]),
     ('/cobot/checkin', cobot.checkin_handler, ["POST"]),
-    ('/cobot/all_checkins', cobot.all_checking_handler, ["GET"])
+    ('/cobot/all_checkins', cobot.all_checking_handler, ["GET"]),
+    ('/hubspot/auth', hubspot.auth_handler, ["GET"]),
+    ('/hubspot/callback', hubspot.callback_handler, ["GET"])
 ]
 
 for url in urls:
