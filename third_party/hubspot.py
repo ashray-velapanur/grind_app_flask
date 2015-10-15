@@ -37,3 +37,19 @@ class HubspotAPI(object):
 		)
 		contacts_list = response.json()['contacts']
 		return jsonify({'contacts':contacts_list})
+
+	def create_contact(self):
+		form_guid = "3a58aefb-3ded-4b10-b0cf-5d23921fec53"
+		response = requests.post(
+			"https://forms.hubspot.com/uploads/form/v2/"+self.portal_id+"/"+form_guid,
+			headers = {
+				"Authorization": "Bearer "+self.access_token
+			},
+			verify = False,  # Verify SSL certificate
+			data = {
+				"firstname":request.form['first_name'],
+				"lastname":request.form['last_name'],
+				"email":request.form['email']
+			}
+		)
+		return redirect("/hubspot/contacts")
