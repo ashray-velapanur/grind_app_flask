@@ -54,7 +54,8 @@ urls = [
     ('/hubspot/contacts', hubspot.hubspot_contacts_handler, ["GET"]),
     ('/hubspot/search', hubspot.hubspot_search_handler, ["POST"]),
     ('/hubspot/create_contact', hubspot.hubspot_create_contact_handler, ["POST"]),
-    ('/hubspot/deal/create', hubspot.hubspot_deal_create_handler, ["GET"])
+    ('/hubspot/deal/create', hubspot.hubspot_deal_create_handler, ["POST"]),
+    ('/hubspot/deal/list', hubspot.hubspot_deal_list_handler, ["GET"])
 ]
 
 for url in urls:
