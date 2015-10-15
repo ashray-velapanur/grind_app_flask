@@ -9,3 +9,7 @@ def hubspot_callback_handler():
 	access_token = request.args.get('access_token', None)
 	refresh_token = request.args.get('refresh_token', None)
 	print access_token, refresh_token
+
+def hubspot_contacts_handler():
+	api = HubspotAPI()
+	return api.get_contacts()

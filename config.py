@@ -17,6 +17,7 @@ HUBSPOT = {
 	'portal_id': '1713132',
 	'redirect_uri': 'http://oscarosl-test.appspot.com:5000/hubspot/callback',
 	'scope': 'contacts-rw+offline',
-	'access_token': '55c1ead5-9dc3-4005-8bd9-7155f86cf6ab',
- 	'refresh_token': '5727b289-f501-4ecc-9e64-ce50cfcd509d'
+	'access_token': '30ee9a06-c02e-41e0-8f34-7f1b77f73505',
+	'refresh_token': '215030c6-3532-4348-b608-9637a637e28c',
+	'api_key': '8be0c176-b509-496c-8294-abf239e12c93'
 }
