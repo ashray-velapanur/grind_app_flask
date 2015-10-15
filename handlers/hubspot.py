@@ -21,3 +21,6 @@ def hubspot_search_handler():
 def hubspot_create_contact_handler():
 	api = HubspotAPI()
 	return api.create_contact()
+
+def hubspot_deal_create_handler():
+	print HubspotAPI().create_deal()

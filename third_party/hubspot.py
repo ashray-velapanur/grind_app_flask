@@ -2,6 +2,9 @@ from config import HUBSPOT
 import requests
 from flask import Flask, render_template, request, redirect, json, session, jsonify
 
+import urllib, urllib2
+
+
 class HubspotAPI(object):
 	def __init__(self, config=HUBSPOT):
 		self.client_id = config['client_id']
@@ -14,6 +17,52 @@ class HubspotAPI(object):
 
 	def auth_url(self):
 		return "https://app.hubspot.com/auth/authenticate?client_id=%s&portalId=%s&redirect_uri=%s&scope=%s"%(self.client_id, self.portal_id, self.redirect_uri, self.scope)
+	
+	def create_deal(self):
+		params = {
+			'associations': {
+				"associatedCompanyIds": [74985475],
+                "associatedVids": [
+                    3
+                ]
+            },
+            "portalId": 1713132,
+            "properties": [
+                {
+                    "value": "Tim's Newer Deal",
+                    "name": "dealname"
+                },
+                {
+                    "value": "appointmentscheduled",
+                    "name": "dealstage"
+                },
+                {
+                    "value": "24",
+                    "name": "hubspot_owner_id"
+                },
+                {
+                    "value": 1409443200000,
+                    "name": "closedate"
+                },
+                {
+                    "value": "60000",
+                    "name": "amount"
+                },
+                {
+                    "value": "newbusiness",
+                    "name": "dealtype"
+                }
+            ]
+        }
+		response = requests.post(
+			"https://api.hubapi.com/deals/v1/deal?hapikey=" + self.api_key + '&portalId=1713132',
+			headers = {
+				"Content-Type": 'application/json'
+			},
+			verify = False,  # Verify SSL certificate
+			data = params
+		)
+		print response.json()
 
 	def get_contacts(self):
 		response = requests.get(
