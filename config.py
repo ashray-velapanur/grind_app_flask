@@ -16,5 +16,7 @@ HUBSPOT = {
 	'client_id': 'cbe8a89d-72fe-11e5-963c-e78f9b100c80',
 	'portal_id': '1713132',
 	'redirect_uri': 'http://oscarosl-test.appspot.com:5000/hubspot/callback',
-	'scope': 'contacts-rw+offline'
+	'scope': 'contacts-rw+offline',
+	'access_token': '55c1ead5-9dc3-4005-8bd9-7155f86cf6ab',
+ 	'refresh_token': '5727b289-f501-4ecc-9e64-ce50cfcd509d'
 }
