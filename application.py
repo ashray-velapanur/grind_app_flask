@@ -51,7 +51,8 @@ urls = [
     ('/cobot/all_checkins', cobot.all_checking_handler, ["GET"]),
     ('/hubspot/auth', hubspot.hubspot_auth_handler, ["GET"]),
     ('/hubspot/callback', hubspot.hubspot_callback_handler, ["GET"]),
-    ('/hubspot/contacts', hubspot.hubspot_contacts_handler, ["GET"])
+    ('/hubspot/contacts', hubspot.hubspot_contacts_handler, ["GET"]),
+    ('/hubspot/search', hubspot.hubspot_search_handler, ["POST"])
 ]
 
 for url in urls:

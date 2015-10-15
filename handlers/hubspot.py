@@ -13,3 +13,7 @@ def hubspot_callback_handler():
 def hubspot_contacts_handler():
 	api = HubspotAPI()
 	return api.get_contacts()
+
+def hubspot_search_handler():
+	api = HubspotAPI()
+	return api.search_contacts()

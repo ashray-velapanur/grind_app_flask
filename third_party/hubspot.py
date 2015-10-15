@@ -25,3 +25,15 @@ class HubspotAPI(object):
 		)
 		contacts_list = response.json()['contacts']
 		return jsonify({'contacts':contacts_list})
+
+	def search_contacts(self):
+		query = request.form['query']
+		response = requests.get(
+			"https://api.hubapi.com/contacts/v1/search/query?hapikey="+self.api_key+"&q="+query,
+			headers = {
+			    "Authorization": "Bearer "+self.access_token,
+			},
+			verify = False,  # Verify SSL certificate
+		)
+		contacts_list = response.json()['contacts']
+		return jsonify({'contacts':contacts_list})
