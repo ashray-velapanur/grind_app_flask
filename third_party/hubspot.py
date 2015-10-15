@@ -6,6 +6,7 @@ class HubspotAPI(object):
 		self.scope = config['scope']
 		self.redirect_uri = config['redirect_uri']
 		self.portal_id = config['portal_id']
+		self.access_token = config['access_token']
 
 	def auth_url(self):
 		return "https://app.hubspot.com/auth/authenticate?client_id=%s&portalId=%s&redirect_uri=%s&scope=%s"%(self.client_id, self.portal_id, self.redirect_uri, self.scope)
