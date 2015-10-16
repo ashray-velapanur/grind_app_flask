@@ -25,8 +25,11 @@ def hubspot_create_contact_handler():
 def hubspot_deal_create_handler():
 	return HubspotAPI().create_deal()
 
+def hubspot_deal_update_handler():
+	return HubspotAPI().update_deal()
+
 def hubspot_deal_list_handler():
-	return HubspotAPI().get_deals()
+	return jsonify({'results':HubspotAPI().get_deals()})
 
 def hubspot_workflows_list_handler():
 	return HubspotAPI().get_workflows()

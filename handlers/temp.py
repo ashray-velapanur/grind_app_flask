@@ -9,7 +9,7 @@ import recurly, requests
 from recurly import Account, Transaction, BillingInfo
 
 import datetime
-
+from third_party.hubspot import HubspotAPI
 
 recurly.SUBDOMAIN = 'beagles'
 recurly.API_KEY = '413a664bcd874f4fb2b17b68dd1cbf8c'
@@ -31,7 +31,12 @@ def grind():
     spaces = controller.get_items()
     userController = UserController()
     user = userController.get_item(session['email']) if 'email' in session else None
-    return render_template("grind.html", spaces=spaces, user=user)
+    deals_list = HubspotAPI().get_deals()
+    deals = []
+    for deal in deals_list:
+        deals.append({'id':deal["dealId"],'name':deal["properties"]["dealname"]["value"]})
+    deal_stages = ['appointmentscheduled','qualifiedtobuy','presentationscheduled','decisionmakerboughtin','contractsent','closedwon','closedlost']
+    return render_template("grind.html", spaces=spaces, user=user, deals=deals, deal_stages=deal_stages)
 
 def get_spaces():
     controller = SpaceController()

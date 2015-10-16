@@ -133,7 +133,17 @@
                                 <form action="/hubspot/deal/create" method="post">
                                     NAME: <input type="text" name="name"><br>
                                     AMOUNT: <input type="text" name="amount"><br>
-                                    <input type="submit" value="Create Deal">
+                                    <input type="submit" value="Create Deal"><br><br>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <form action="/hubspot/deal/update" method="post">
+                                    DEAL: <select name="id">{% for deal in deals %}<option value="{{deal.id}}">{{deal.name}}</option>{% endfor %}</select><br>
+                                    <input name="property" type="hidden" value="dealstage">
+                                    STAGE: <select name="value">{% for stage in deal_stages %}<option value="{{stage}}">{{stage}}</option>{% endfor %}</select><br>
+                                    <input type="submit" value="Update Deal">
                                 </form>
                             </td>
                         </tr>

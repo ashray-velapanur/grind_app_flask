@@ -31,13 +31,27 @@ class HubspotAPI(object):
 		)
 		return jsonify(response.json())
 
+	def update_deal(self):
+		name = request.form['property']
+		value = request.form['value']
+		id = request.form['id']
+		response = requests.put(
+			"https://api.hubapi.com/deals/v1/deal/"+id+"?hapikey=" + self.api_key + '&portalId=1713132',
+			headers = {
+				"Content-Type": 'application/json'
+			},
+			verify = False,  # Verify SSL certificate
+			data = json.dumps({"properties":[{"value": value,"name": name}]})
+		)
+		return jsonify(response.json())
+
 	def get_deals(self):
 		response = requests.get(
 			"https://api.hubapi.com/deals/v1/deal/recent/created?hapikey=" + self.api_key,
 			verify = False,  # Verify SSL certificate
 		)
 		deals_list = response.json()['results']
-		return jsonify({'results':deals_list})
+		return deals_list
 
 	def get_contacts(self):
 		response = requests.get(

@@ -55,6 +55,7 @@ urls = [
     ('/hubspot/search', hubspot.hubspot_search_handler, ["POST"]),
     ('/hubspot/create_contact', hubspot.hubspot_create_contact_handler, ["POST"]),
     ('/hubspot/deal/create', hubspot.hubspot_deal_create_handler, ["POST"]),
+    ('/hubspot/deal/update', hubspot.hubspot_deal_update_handler, ["POST"]),
     ('/hubspot/deal/list', hubspot.hubspot_deal_list_handler, ["GET"]),
     ('/hubspot/workflows/list', hubspot.hubspot_workflows_list_handler, ["GET"]),
     ('/hubspot/workflows/create', hubspot.hubspot_workflows_create_handler, ["POST"])
