@@ -27,3 +27,9 @@ def hubspot_deal_create_handler():
 
 def hubspot_deal_list_handler():
 	return HubspotAPI().get_deals()
+
+def hubspot_workflows_list_handler():
+	return HubspotAPI().get_workflows()
+
+def hubspot_workflows_create_handler():
+	return HubspotAPI().create_workflow()

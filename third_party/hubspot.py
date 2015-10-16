@@ -77,3 +77,49 @@ class HubspotAPI(object):
 			}
 		)
 		return redirect("/hubspot/contacts")
+
+	def get_workflows(self):
+		response = requests.get(
+			"https://api.hubapi.com/automation/v3/workflows?hapikey="+self.api_key+"&count=20",
+			verify = False,  # Verify SSL certificate
+		)
+		workflows_list = response.json()['workflows']
+		return jsonify({'workflows':workflows_list})
+
+	def create_workflow(self):
+		name = request.form['name']
+		params = {
+			"enabled": False,
+			"allowContactToTriggerMultipleTimes": True,
+			"name": name,
+			"onlyExecOnBizDays": False,
+			"canEnrollFromSalesforce": False,
+			"type": "DRIP_DELAY",
+			"nurtureTimeRange": {
+			    "enabled": False,
+			    "startHour": 9,
+			    "stopHour": 17
+			},
+			"unenrollmentSetting": {
+			    "excludedWorkflows": [],
+			    "type": "NONE"
+			},
+			"actions": [
+			    {
+			        "newValue": "HubSpot",
+			        "propertyName": "company",
+			        "type": "SET_CONTACT_PROPERTY"
+			    }
+			],
+			"goalListIds": [],
+			"listening": False
+		}
+		response = requests.post(
+			"https://api.hubapi.com/automation/v3/workflows?hapikey=" + self.api_key,
+			headers = {
+				"Content-Type": 'application/json'
+			},
+			verify = False,  # Verify SSL certificate
+			data = json.dumps(params)
+		)
+		return jsonify(response.json())
