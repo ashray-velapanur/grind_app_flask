@@ -21,3 +21,8 @@ HUBSPOT = {
 	'refresh_token': '215030c6-3532-4348-b608-9637a637e28c',
 	'api_key': '8be0c176-b509-496c-8294-abf239e12c93'
 }
+
+SUPERSAAS = {
+	'username': 'beagles',
+	'password': 'beagles666'
+}

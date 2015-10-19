@@ -20,6 +20,7 @@ application.secret_key = str(uuid4())
 
 urls = [
     ('/', temp.index, ['GET']),
+    ('/test', temp.test, ['GET']),
     ('/index', temp.index, ['GET']),
     ('/grind', temp.grind, ["GET", "POST"]),
     ('/spaces', temp.get_spaces, ["POST"]),

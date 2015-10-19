@@ -10,10 +10,14 @@ from recurly import Account, Transaction, BillingInfo
 
 import datetime
 from third_party.hubspot import HubspotAPI
+from third_party.supersaas import SuperSaasAPI
 
 recurly.SUBDOMAIN = 'beagles'
 recurly.API_KEY = '413a664bcd874f4fb2b17b68dd1cbf8c'
 recurly.DEFAULT_CURRENCY = 'USD'
+
+def test():
+    SuperSaasAPI().bookings()
 
 def index():
     print 'In index page'
