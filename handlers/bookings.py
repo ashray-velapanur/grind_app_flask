@@ -147,6 +147,10 @@ def get_events_handler():
     events = get_events()
     return json.dumps({'events':events})
 
+def get_tickets_handler():
+    tickets = get_event_tickets()
+    return json.dumps({'tickets':tickets})
+
 def get_events():
     response = requests.get(
         "https://www.eventbriteapi.com/v3/users/115769153821/owned_events/",
@@ -158,3 +162,16 @@ def get_events():
     )
     events = response.json()['events']
     return events
+
+def get_event_tickets():
+    id = request.args.get('event_id')
+    response = requests.get(
+        "https://www.eventbriteapi.com/v3/events/"+id+"/ticket_classes/",
+        headers = {
+            "Authorization": "Bearer WWVNO7GS2EN36S5JDLS3",
+        },
+        verify = False,  # Verify SSL certificate,
+        data = {'order_by':"start_asc"}
+    )
+    ticket_classes = response.json()['ticket_classes']
+    return ticket_classes

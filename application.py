@@ -44,6 +44,7 @@ urls = [
     ('/events/create', bookings.create_event, ["POST"]),
     ('/events/list', bookings.list_event_handler, ["GET"]),
     ('/events/list', bookings.get_events_handler, ["POST"]),
+    ('/events/tickets', bookings.get_tickets_handler, ["GET"]),
     ('/cobot/auth', cobot.auth_handler, ["GET"]),
     ('/cobot/callback', cobot.callback_handler, ["GET"]),
     ('/cobot/create_member', cobot.create_member_handler, ["GET"]),
