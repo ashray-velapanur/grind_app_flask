@@ -41,6 +41,7 @@ urls = [
     ('/users/industry', users.get_users_for_industry, ["POST"]),
     ('/auth/linkedin', auth.linkedin_auth_handler, ["GET"]),
     ('/auth/logout', auth.logout, ["GET", "POST"]),
+    ('/auth/check_login', auth.check_login_handler, ["GET"]),
     ('/event/create', temp.create_event_page_handler, ["GET"]),
     ('/event/create', bookings.create_event_handler, ["POST"]),
     ('/events/create', bookings.create_event, ["POST"]),

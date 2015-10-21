@@ -19,6 +19,14 @@ def linkedin_auth_handler():
 	elif 'message' in profile:
 		return jsonify({'success':False,'error':profile['message']})
 
+def check_login_handler():
+	email = request.args.get('email', None)
+	if email and 'email' in session and session['email'] == email:
+		response = {'success': True}
+	else:
+		response = {'success': False}
+	return jsonify(response)
+
 def logout():
 	session.pop("email", None)
 	return redirect('/')
