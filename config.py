@@ -32,3 +32,9 @@ EVENTBRITE = {
 	'token_url': 'https://www.eventbrite.com/oauth/token',
 	'token': '5N7I4HHI2OYIK3OJXGSX'
 }
+
+LAYER = {
+	'provider_id': 'layer:///providers/6e3b6972-77df-11e5-afe9-74ba921240a9',
+	'key_id': 'layer:///keys/171f7272-77e0-11e5-addb-74ba921240a9',
+	'rsa_key_path': "../static/keys/layer.pem"
+}

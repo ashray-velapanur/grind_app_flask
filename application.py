@@ -2,8 +2,7 @@ from flask import Flask, render_template, request, redirect, json, session, json
 import boto
 import requests
 from uuid import uuid4
-
-from handlers import temp, bookings, users, cobot, hubspot, auth
+from handlers import temp, bookings, users, cobot, hubspot, auth, layer
 
 # EB looks for an 'application' callable by default.
 application = Flask(__name__)
@@ -20,6 +19,7 @@ application.secret_key = str(uuid4())
 
 urls = [
     ('/', temp.index, ['GET']),
+    ('/identity_token', layer.get_identity_token, ['GET']),
     ('/test', temp.test, ['GET']),
     ('/index', temp.index, ['GET']),
     ('/grind', temp.grind, ["GET", "POST"]),
