@@ -13,7 +13,7 @@ def linkedin_auth_handler():
 		if profile_id==linkedin_id:
 			profile_email = profile['emailAddress']
 			session["email"] = profile_email
-			return jsonify({'success':True})
+			return jsonify({'success':True, 'email': profile_email})
 		else:
 			return jsonify({'success':False,'error':'LinkedIn ID could not be verified'})
 	elif 'message' in profile:
